@@ -1,7 +1,12 @@
 {
   "name": "how-old-is-my-package",
-  "version": "0.1.0",
-  "private": true,
+  "author": {
+    "name": "Jozsef Koller",
+    "email": "info@onet.dev"
+  },
+  "version": "1.0.0",
+  "private": false,
+  "license": "MIT",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -9,12 +14,23 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "dayjs": "^1.11.5",
     "next": "12.2.5",
     "react": "18.2.0",
-    "react-dom": "18.2.0"
+    "react-dom": "18.2.0",
+    "semver": "^7.3.7"
   },
   "devDependencies": {
+    "@types/node": "^18.7.14",
+    "@types/react": "^18.0.18",
+    "@types/semver": "^7.3.12",
+    "@typescript-eslint/eslint-plugin": "^5.36.1",
+    "@typescript-eslint/parser": "^5.36.1",
     "eslint": "8.23.0",
-    "eslint-config-next": "12.2.5"
+    "eslint-config-next": "12.2.5",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "prettier": "^2.7.1",
+    "typescript": "^4.8.2"
   }
 }

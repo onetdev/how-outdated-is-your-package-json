@@ -25,18 +25,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  flex-grow: 1;
-}
-
-.title a {
-  color: #0070f3;
-  text-decoration: none;
-}
-
-.title a:hover,
-.title a:focus,
-.title a:active {
-  text-decoration: underline;
+  padding: 0 1rem;
 }
 
 .title {
@@ -65,7 +54,7 @@
     Bitstream Vera Sans Mono, Courier New, monospace;
 }
 
-.grid {
+.steps {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -73,7 +62,7 @@
   max-width: 800px;
 }
 
-.card {
+.section {
   margin: 1rem;
   padding: 1.5rem;
   text-align: left;
@@ -82,34 +71,21 @@
   border: 1px solid #eaeaea;
   border-radius: 10px;
   transition: color 0.15s ease, border-color 0.15s ease;
-  max-width: 300px;
 }
 
-.card:hover,
-.card:focus,
-.card:active {
-  color: #0070f3;
-  border-color: #0070f3;
-}
-
-.card h2 {
+.section h2 {
   margin: 0 0 1rem 0;
   font-size: 1.5rem;
 }
 
-.card p {
+.section p {
   margin: 0;
   font-size: 1.25rem;
   line-height: 1.5;
 }
 
-.logo {
-  height: 1em;
-  margin-left: 0.5rem;
-}
-
 @media (max-width: 600px) {
-  .grid {
+  .steps {
     width: 100%;
     flex-direction: column;
   }
@@ -122,8 +98,5 @@
   }
   .code {
     background: #111;
-  }
-  .logo img {
-    filter: invert(1);
   }
 }
