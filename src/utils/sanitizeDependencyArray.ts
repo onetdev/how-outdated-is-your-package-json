@@ -8,6 +8,6 @@ const sanitizeDependencyArray = (
 ): DependencyEntry[] =>
   Object.entries(items)
     .filter(([, target]) => valid(coerce(target)))
-    .map(([name, target]) => ({ name, target, isDev }));
+    .map(([name, target]) => ({ name, targetVersion: target, isDev }));
 
 export default sanitizeDependencyArray;

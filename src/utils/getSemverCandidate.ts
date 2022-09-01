@@ -15,7 +15,7 @@ const getSemverCandidate = (
   return {
     version: matchVersion,
     date,
-    ageInSeconds: dayjs().diff(date, "seconds"),
+    age: dayjs().diff(date, "seconds"),
   };
 };
 

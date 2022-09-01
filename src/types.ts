@@ -17,15 +17,22 @@ export type PackageLookupResult = DependencyEntry & {
   upgradeAgeDiff: AgeInSeconds;
 };
 
-export type PackgeStatListItem = PackageLookupResult;
-export type PackageStatCategory<T = PackgeStatListItem> = {
-  orderedItems: T[];
-  cumulativeAge: AgeInSeconds;
-  averageAge: AgeInSeconds;
+export type PackageStatData = {
+  package: string;
+  latestAge: AgeInSeconds;
+  latestDate: Dayjs;
+  latestVersion: string;
+  maxSatisfiedAge: AgeInSeconds;
+  maxSatisfiedDate: Dayjs;
+  maxSatisfiedVersion: string;
+  targetVersion: string;
+  upgradeAgeDiff: AgeInSeconds;
 };
+export type PackageDataMathFields =
+  | "maxSatisfiedAge"
+  | "latestAge"
+  | "upgradeAgeDiff";
 export type PackageStat = {
   counters: { total: number; dev: number; nonDev: number };
-  byAge: PackageStatCategory;
-  byFreshness: PackageStatCategory;
-  byUpgradability: PackageStatCategory;
+  data: PackageStatData[];
 };

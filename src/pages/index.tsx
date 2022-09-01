@@ -1,4 +1,5 @@
 import Head from "next/head";
+import DataTable, { TableColumn } from "react-data-table-component";
 import {
   ChangeEventHandler,
   FunctionComponent,
@@ -10,6 +11,8 @@ import styles from "@/styles/Home.module.css";
 import usePackageParser from "@/hooks/usePackageParser";
 import useRegistryLookup from "@/hooks/useRegistryLookup";
 import usePackageStats from "@/hooks/usePackageStats";
+import { AgeInSeconds, PackageStatData } from "@/types";
+import dayjs from "@/utils/date";
 
 const REGISTRY_URL = "https://registry.npmjs.org";
 const Home: FunctionComponent = () => {
@@ -26,6 +29,69 @@ const Home: FunctionComponent = () => {
 
   const handleFetchStart: MouseEventHandler<HTMLButtonElement> = () =>
     lookup.lookup();
+
+  const humanizeAge = (age: AgeInSeconds) =>
+    dayjs.duration(age, "seconds").humanize(false);
+
+  const statColumns: TableColumn<PackageStatData>[] = [
+    {
+      name: "Package",
+      selector: (a) => a.package,
+      sortable: true,
+      grow: 2,
+      format: (a) => (
+        <a
+          href={`https://www.npmjs.com/package/${a.package}`}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          {a.package}
+        </a>
+      ),
+    },
+    { name: "Target version", selector: (a) => a.targetVersion, compact: true },
+    {
+      name: "The maximum you allow",
+      selector: (a) => a.maxSatisfiedDate.format(),
+      format: (a) => (
+        <>
+          {a.maxSatisfiedVersion}
+          <br />
+          {a.maxSatisfiedDate.format("l")}
+        </>
+      ),
+    },
+    {
+      name: "It could be",
+      selector: (a) => a.latestDate.format(),
+      format: (a) => (
+        <>
+          {a.latestVersion}
+          <br />
+          {a.latestDate.format("l")}
+        </>
+      ),
+    },
+    {
+      name: "Youngest allowed",
+      selector: (a) => a.maxSatisfiedAge,
+      sortable: true,
+      format: (a) => humanizeAge(a.maxSatisfiedAge),
+    },
+    {
+      name: "Youngest possible",
+      selector: (a) => a.latestAge,
+      sortable: true,
+      format: (a) => humanizeAge(a.latestAge),
+    },
+    {
+      name: "How far from latest",
+      selector: (a) => a.upgradeAgeDiff,
+      sortable: true,
+      format: (a) =>
+        a.upgradeAgeDiff ? humanizeAge(a.upgradeAgeDiff) : "on the latest",
+    },
+  ];
 
   return (
     <div className={styles.container}>
@@ -51,7 +117,7 @@ const Home: FunctionComponent = () => {
           upgrading.
         </p>
 
-        <div className={styles.steps}>
+        <div className={styles.stepContainer}>
           <section className={styles.stepSection}>
             <h2>1. step</h2>
             <h3>
@@ -64,7 +130,10 @@ const Home: FunctionComponent = () => {
               perform live magic on top of it. Check out the repo on Github for
               more details.
             </p>
-            <textarea onChange={handleInputChange}></textarea>
+            <textarea
+              className={styles.jsonInput}
+              onChange={handleInputChange}
+            ></textarea>
           </section>
 
           <section className={styles.stepSection}>
@@ -79,8 +148,7 @@ const Home: FunctionComponent = () => {
                 <strong>
                   {dependencies.filter((item) => !item.isDev).length}
                 </strong>{" "}
-                is regular. Press
-                <strong>start</strong> to see the magic.
+                is regular. Press <strong>start</strong> to see the magic.
               </h3>
             )}
             <p>
@@ -98,6 +166,9 @@ const Home: FunctionComponent = () => {
           <section className={styles.stepSection}>
             <h2>3. step</h2>
             <p>Check out your freshly baked results</p>
+            {stats?.counters?.total > 0 && (
+              <DataTable columns={statColumns} data={stats.data} />
+            )}
           </section>
         </div>
       </main>

@@ -1,19 +1,10 @@
 import { useEffect, useState } from "react";
 
-import { PackageLookupResult, PackageStat, PackageStatCategory } from "@/types";
+import { PackageLookupResult, PackageStat, PackageStatData } from "@/types";
 
 type PackageStatsProps = {
   source: PackageLookupResult[] | null;
 };
-
-const getStatByField = (
-  source: PackageLookupResult[],
-  getter: (data: PackageLookupResult) => number
-): PackageStatCategory => ({
-  orderedItems: source.sort((a, b) => getter(a) - getter(b)),
-  cumulativeAge: source.reduce((acc, x) => acc + getter(x), 0),
-  averageAge: source.reduce((acc, x) => acc + getter(x), 0) / source.length,
-});
 
 const usePackageStats = ({ source }: PackageStatsProps) => {
   const [stats, setStats] = useState<PackageStat | null>();
@@ -24,22 +15,39 @@ const usePackageStats = ({ source }: PackageStatsProps) => {
       return;
     }
 
-    setStats({
+    const result: PackageStat = {
       counters: {
         total: source.length,
         dev: source.filter((x) => x.isDev).length,
         nonDev: source.filter((x) => !x.isDev).length,
       },
-      // From oldest to youngest deps (max satisfied by target version)
-      byAge: getStatByField(source, (data) => data.targetBest?.age || 0),
-      // From least maintained to most maintained deps
-      byFreshness: getStatByField(source, (data) => data.packageBest?.age || 0),
-      // Deps that have the most upgrade potential
-      byUpgradability: getStatByField(
-        source,
-        (data) => data.upgradeAgeDiff || 0
-      ),
-    });
+      data: [],
+    };
+
+    for (const entry of source) {
+      const { name, targetVersion, upgradeAgeDiff } = entry;
+      const { targetBest, packageBest } = entry;
+
+      if (!targetBest || !packageBest) {
+        continue;
+      }
+
+      const data: PackageStatData = {
+        package: name,
+        latestAge: packageBest.age,
+        latestDate: packageBest.date,
+        latestVersion: packageBest.version,
+        maxSatisfiedAge: targetBest.age,
+        maxSatisfiedDate: targetBest.date,
+        maxSatisfiedVersion: targetBest.version,
+        targetVersion,
+        upgradeAgeDiff,
+      };
+
+      result.data.push(data);
+    }
+
+    setStats(result);
   }, [source]);
 
   return stats;
