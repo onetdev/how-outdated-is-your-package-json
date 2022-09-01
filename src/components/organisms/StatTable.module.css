@@ -1,0 +1,16 @@
+div.rowAlert {
+  background: #ff0000;
+}
+div.rowWarning {
+  background: #e79344;
+}
+div.rowGood {
+  background: #00ff00;
+}
+
+.legend {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin: 0 0 1rem 0;
+}
