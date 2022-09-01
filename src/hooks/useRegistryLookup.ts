@@ -75,6 +75,7 @@ const useRegistryLookup = ({
   };
 
   return {
+    progress,
     isFetching: progress.total !== progress.fulfilled,
     results,
     lookup,
