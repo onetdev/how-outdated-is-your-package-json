@@ -136,7 +136,7 @@ const StatTable: FunctionComponent<StatTableProps> = ({ data }) => (
         <ul>
           <li>👻 - Haunting packages over 5 years of neglect</li>
           <li>💀 - 3 years, lost hope</li>
-          <li>🧟 - Haven't been touched in more than 1.5 years</li>
+          <li>🧟 - Haven&#8217;t been touched in more than 1.5 years</li>
           <li>👍 - Okay</li>
           <li>🔥 - Pretty fresh</li>
         </ul>
