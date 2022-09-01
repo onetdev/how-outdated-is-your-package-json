@@ -1,9 +1,40 @@
+:root {
+  --primary: #0070f3;
+  --on-primary: #fff;
+  --secondary: #fafafa;
+  --on-secondary: #000;
+  --error: #f00;
+  --on-error: #fff;
+  --background: #fff;
+  --on-background: #000;
+  --font-monospace: Menlo, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono,
+  Bitstream Vera Sans Mono, Courier New, monospace;
+  --font-default: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
+    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --primary: #0070f3;
+    --on-primary: #fff;
+    --secondary: #111;
+    --on-secondary: #fafafa;
+    --error: #f00;
+    --on-error: #fff;
+    --background: #222;
+    --on-background: #fff;
+  }
+
+  html {
+    color-scheme: dark;
+  }
+}
+
 html,
 body {
   padding: 0;
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
-    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+  font-family: var(--font-default);
 }
 
 a {
@@ -15,12 +46,7 @@ a {
   box-sizing: border-box;
 }
 
-@media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: dark;
-  }
-  body {
-    color: #eee;
-    background: #111;
-  }
+body {
+  color: var(--on-background);
+  background: var(--background);
 }
