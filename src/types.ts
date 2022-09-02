@@ -19,6 +19,7 @@ export type PackageLookupResult = DependencyEntry & {
 
 export type PackageStatData = {
   package: string;
+  isDev: boolean;
   latestAge: AgeInSeconds;
   latestDate: Dayjs;
   latestVersion: string;

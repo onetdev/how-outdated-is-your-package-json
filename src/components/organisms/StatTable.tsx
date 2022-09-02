@@ -11,7 +11,20 @@ import dayjs from "@/utils/date";
 const YEAR_SECONDS = 365 * 24 * 60 * 60;
 const humanizeAge = (age: AgeInSeconds) =>
   dayjs.duration(age, "seconds").humanize(false);
-
+const isAgeAlert = (age: AgeInSeconds) => age > YEAR_SECONDS * 3;
+const isAgeWarning = (age: AgeInSeconds) => age > YEAR_SECONDS * 1.5;
+const ageColorStyle = (
+  selector: (row: PackageStatData) => AgeInSeconds
+): ConditionalStyles<PackageStatData>[] => [
+  {
+    when: (row) => isAgeAlert(selector(row)),
+    classNames: [styles.rowAlert],
+  },
+  {
+    when: (row) => !isAgeAlert(selector(row)) && isAgeWarning(selector(row)),
+    classNames: [styles.rowWarning],
+  },
+];
 const statColumns: TableColumn<PackageStatData>[] = [
   {
     name: "Package",
@@ -27,6 +40,12 @@ const statColumns: TableColumn<PackageStatData>[] = [
         {a.package}
       </a>
     ),
+  },
+  {
+    name: "",
+    selector: (a) => a.isDev,
+    sortable: true,
+    format: (a) => (a.isDev ? "dev" : ""),
   },
   { name: "Target version", selector: (a) => a.targetVersion, compact: true },
   {
@@ -56,22 +75,15 @@ const statColumns: TableColumn<PackageStatData>[] = [
     selector: (a) => a.maxSatisfiedAge,
     sortable: true,
     format: (a) => humanizeAge(a.maxSatisfiedAge),
+    conditionalCellStyles: ageColorStyle((row) => row.maxSatisfiedAge),
   },
   {
     name: "Latest release",
     selector: (a) => a.latestAge,
     sortable: true,
     format: (a) => <>{humanizeAge(a.latestAge)} ago</>,
+    conditionalCellStyles: ageColorStyle((row) => row.latestAge),
   },
-  /*
-  {
-    name: "How far from latest",
-    selector: (a) => a.upgradeAgeDiff,
-    sortable: true,
-    format: (a) =>
-      a.upgradeAgeDiff ? humanizeAge(a.upgradeAgeDiff) : "on the latest",
-  },
-  */
   {
     name: "Status?",
     selector: (a) => a.latestAge,
@@ -88,27 +100,11 @@ const statColumns: TableColumn<PackageStatData>[] = [
   },
 ];
 
-const isPackageAlert = (row: PackageStatData) =>
-  row.maxSatisfiedAge > YEAR_SECONDS * 3;
-const isPackageWarning = (row: PackageStatData) =>
-  row.maxSatisfiedAge > YEAR_SECONDS * 1.5;
-const conditionalRowStyles: ConditionalStyles<PackageStatData>[] = [
-  {
-    when: (row) => isPackageAlert(row),
-    classNames: [styles.rowAlert],
-  },
-  {
-    when: (row) => !isPackageAlert(row) && isPackageWarning(row),
-    classNames: [styles.rowWarning],
-  },
-];
-
 type StatTableProps = { data: PackageStatData[] };
 const StatTable: FunctionComponent<StatTableProps> = ({ data }) => (
   <>
     <DataTable
       columns={statColumns}
-      conditionalRowStyles={conditionalRowStyles}
       data={data}
       dense
       fixedHeader
