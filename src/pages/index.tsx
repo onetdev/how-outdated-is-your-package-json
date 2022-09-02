@@ -1,22 +1,27 @@
+import { clsx } from "clsx";
 import Head from "next/head";
 import {
   ChangeEventHandler,
   FunctionComponent,
   MouseEventHandler,
+  useRef,
   useState,
 } from "react";
 
+import dummy from "@/assets/dummy-package.json";
+import Button from "@/components/atoms/Button";
+import TextArea from "@/components/atoms/TextArea";
 import StatTable from "@/components/organisms/StatTable";
+import MainLayout from "@/components/templates/MainLayout";
 import usePackageParser from "@/hooks/usePackageParser";
 import usePackageStats from "@/hooks/usePackageStats";
 import useRegistryLookup from "@/hooks/useRegistryLookup";
 import styles from "@/styles/Home.module.css";
-import MainLayout from "@/components/templates/MainLayout";
-import Button from "@/components/atoms/Button";
 
 const REGISTRY_URL = "https://registry.npmjs.org";
 
 const Home: FunctionComponent = () => {
+  const $input = useRef<HTMLTextAreaElement>(null);
   const [inputRaw, setInputRaw] = useState<string | null>(null);
   const { dependencies } = usePackageParser({ input: inputRaw });
   const lookup = useRegistryLookup({ dependencies, registryUrl: REGISTRY_URL });
@@ -26,6 +31,14 @@ const Home: FunctionComponent = () => {
     event
   ) => {
     setInputRaw(event.target.value);
+  };
+  const handleDummyFill: MouseEventHandler<HTMLButtonElement> = () => {
+    if (!$input.current) {
+      return;
+    }
+    const json = JSON.stringify(dummy, null, 2);
+    $input.current.value = json;
+    setInputRaw(json);
   };
 
   const handleFetchStart: MouseEventHandler<HTMLButtonElement> = () =>
@@ -42,7 +55,7 @@ const Home: FunctionComponent = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <h1 className={styles.title}>
-        How old is my <code>package.json?</code>
+        How old is my <code className={styles.code}>package.json?</code>
       </h1>
 
       <p className={styles.description}>
@@ -53,26 +66,48 @@ const Home: FunctionComponent = () => {
       </p>
 
       <div className={styles.stepContainer}>
-        <section className={styles.stepSection}>
-          <h2>1. step</h2>
-          <h3>
-            Put your package in here. Don&#8217;t worry, we don&#8217;t store
-            your <code>package.json</code>.
-          </h3>
-          <p>
-            Dev and regular dependencies will be extracted alongside version
-            targets, based on that we will get all the package manifests and
-            perform live magic on top of it. Check out the repo on Github for
-            more details.
+        <section
+          className={clsx(styles.stepSection, styles["stepSection--step1"])}
+        >
+          <h2>
+            1. Providing <code>package.json</code>
+          </h2>
+          <div className={styles.jsonInput}>
+            <TextArea
+              forwardRef={$input}
+              onChange={handleInputChange}
+              placeholder={`{"todo":"Put your package.json here"}`}
+              rows={16}
+            />
+            <Button
+              size="small"
+              variant="secondary"
+              className={styles.jsonDummyButton}
+              onClick={handleDummyFill}
+            >
+              Use demo <code>package.json</code>
+            </Button>
+          </div>
+          <p className={styles.sectionDislaimer}>
+            <small>
+              The website extracts{" "}
+              <code className={styles.code}>dependencies</code> and{" "}
+              <code className={styles.code}>devDependencies</code> from any
+              valid json object while removing semver incompatible version locks
+              (thus removing https/ssh/path packages).{" "}
+              <strong>
+                Don&#8217;t worry, we don&#8217;t store your{" "}
+                <code className={styles.code}>package.json</code> and only query
+                package manifests from the remote registry.
+              </strong>
+            </small>
           </p>
-          <textarea
-            className={styles.jsonInput}
-            onChange={handleInputChange}
-          ></textarea>
         </section>
 
-        <section className={styles.stepSection}>
-          <h2>2. step</h2>
+        <section
+          className={clsx(styles.stepSection, styles["stepSection--step2"])}
+        >
+          <h2>2. Analyze</h2>
           {dependencies.length > 0 && (
             <h3>
               Found {dependencies.length} dependencies of which{" "}
@@ -97,8 +132,10 @@ const Home: FunctionComponent = () => {
           </Button>
         </section>
 
-        <section className={styles.stepSection}>
-          <h2>3. step</h2>
+        <section
+          className={clsx(styles.stepSection, styles["stepSection--step3"])}
+        >
+          <h2>3. Results</h2>
           {lookup.isFetching && (
             <p>
               Something is cooking, are you ready? We&#8217;ve already fetched{" "}
