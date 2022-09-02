@@ -15,6 +15,47 @@
     Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
 }
 
+/* @link https://utopia.fyi/type/calculator?c=320,21,1.2,2500,24,1.25,6,4,&s=0.75|0.5|0.25,1.5|2|3|4|6,s-l */
+:root {
+  --step--4: clamp(0.61rem, calc(0.64rem + -0.01vw), 0.63rem);
+  --step--3: clamp(0.76rem, calc(0.76rem + 0.01vw), 0.77rem);
+  --step--2: clamp(0.91rem, calc(0.90rem + 0.04vw), 0.96rem);
+  --step--1: clamp(1.09rem, calc(1.08rem + 0.08vw), 1.20rem);
+  --step-0: clamp(1.31rem, calc(1.28rem + 0.14vw), 1.50rem);
+  --step-1: clamp(1.58rem, calc(1.53rem + 0.22vw), 1.88rem);
+  --step-2: clamp(1.89rem, calc(1.82rem + 0.33vw), 2.34rem);
+  --step-3: clamp(2.27rem, calc(2.17rem + 0.49vw), 2.93rem);
+  --step-4: clamp(2.72rem, calc(2.58rem + 0.69vw), 3.66rem);
+  --step-5: clamp(3.27rem, calc(3.07rem + 0.96vw), 4.58rem);
+  --step-6: clamp(3.92rem, calc(3.65rem + 1.32vw), 5.72rem);
+}
+
+/* @link https://utopia.fyi/space/calculator?c=320,21,1.2,2500,24,1.25,6,2,&s=0.75|0.5|0.25,1.5|2|3|4|6,s-l */
+:root {
+  --space-3xs: clamp(0.31rem, calc(0.30rem + 0.05vw), 0.38rem);
+  --space-2xs: clamp(0.69rem, calc(0.68rem + 0.05vw), 0.75rem);
+  --space-xs: clamp(1.00rem, calc(0.98rem + 0.09vw), 1.13rem);
+  --space-s: clamp(1.31rem, calc(1.28rem + 0.14vw), 1.50rem);
+  --space-m: clamp(2.00rem, calc(1.96rem + 0.18vw), 2.25rem);
+  --space-l: clamp(2.63rem, calc(2.57rem + 0.28vw), 3.00rem);
+  --space-xl: clamp(3.94rem, calc(3.85rem + 0.41vw), 4.50rem);
+  --space-2xl: clamp(5.25rem, calc(5.14rem + 0.55vw), 6.00rem);
+  --space-3xl: clamp(7.88rem, calc(7.71rem + 0.83vw), 9.00rem);
+
+  /* One-up pairs */
+  --space-3xs-2xs: clamp(0.31rem, calc(0.25rem + 0.32vw), 0.75rem);
+  --space-2xs-xs: clamp(0.69rem, calc(0.62rem + 0.32vw), 1.13rem);
+  --space-xs-s: clamp(1.00rem, calc(0.93rem + 0.37vw), 1.50rem);
+  --space-s-m: clamp(1.31rem, calc(1.17rem + 0.69vw), 2.25rem);
+  --space-m-l: clamp(2.00rem, calc(1.85rem + 0.73vw), 3.00rem);
+  --space-l-xl: clamp(2.63rem, calc(2.35rem + 1.38vw), 4.50rem);
+  --space-xl-2xl: clamp(3.94rem, calc(3.63rem + 1.51vw), 6.00rem);
+  --space-2xl-3xl: clamp(5.25rem, calc(4.70rem + 2.75vw), 9.00rem);
+
+  /* Custom pairs */
+  --space-s-l: clamp(1.31rem, calc(1.06rem + 1.24vw), 3.00rem);
+}
+
 @media (prefers-color-scheme: dark) {
   :root {
     --primary: #0975f0;
