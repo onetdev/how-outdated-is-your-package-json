@@ -34,6 +34,7 @@ const usePackageStats = ({ source }: PackageStatsProps) => {
 
       const data: PackageStatData = {
         package: name,
+        isDev: entry.isDev,
         latestAge: packageBest.age,
         latestDate: packageBest.date,
         latestVersion: packageBest.version,
