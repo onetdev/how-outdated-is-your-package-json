@@ -1,8 +1,7 @@
-.container {
+.wrapper {
   padding: 0 2rem;
   min-height: 100vh;
 }
-
 .footer {
   display: flex;
   flex: 1;
@@ -11,7 +10,6 @@
   justify-content: center;
   align-items: center;
 }
-
 .footer a {
   display: flex;
   justify-content: center;

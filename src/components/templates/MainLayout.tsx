@@ -38,8 +38,8 @@ const MainLayout: FunctionComponent<MainLayoutProps> = ({
   ];
 
   return (
-    <div className={style}>
-      <main className={styles.main}>{children}</main>
+    <div className={styles.wrapper}>
+      <main className={style}>{children}</main>
       <footer className={styles.footer}>
         {links.map(({ href, children: linkChildren }) => (
           <a key={href} href={href} target="_blank" rel="noopener noreferrer">
