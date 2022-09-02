@@ -2,11 +2,13 @@
   --primary: #0070f3;
   --on-primary: #eee;
   --secondary: #eee;
-  --on-secondary: #000;
+  --on-secondary: #222;
   --error: #f00;
-  --on-error: #fff;
-  --background: #fff;
-  --on-background: #000;
+  --on-error: #eee;
+  --background: #eee;
+  --on-background: #222;
+  --surface: #eee;
+  --on-surface: #222;
   --font-monospace: Menlo, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono,
   Bitstream Vera Sans Mono, Courier New, monospace;
   --font-default: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
@@ -23,6 +25,8 @@
     --on-error: #ececec;
     --background: #111;
     --on-background: #ececec;
+    --surface: #222;
+    --on-surface: #dedede;
   }
 
   html {
