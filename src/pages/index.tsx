@@ -12,6 +12,7 @@ import usePackageStats from "@/hooks/usePackageStats";
 import useRegistryLookup from "@/hooks/useRegistryLookup";
 import styles from "@/styles/Home.module.css";
 import MainLayout from "@/components/templates/MainLayout";
+import Button from "@/components/atoms/Button";
 
 const REGISTRY_URL = "https://registry.npmjs.org";
 
@@ -88,12 +89,12 @@ const Home: FunctionComponent = () => {
           <p>
             Please note that packages with invalid version targets are removed.
           </p>
-          <button
+          <Button
             onClick={handleFetchStart}
             disabled={!dependencies.length || lookup.isFetching}
           >
             Start
-          </button>
+          </Button>
         </section>
 
         <section className={styles.stepSection}>

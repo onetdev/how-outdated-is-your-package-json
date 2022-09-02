@@ -1,0 +1,26 @@
+.button {
+  cursor: pointer;
+  font-family: var(--font-default);
+  border: none;
+  transition: ease-in-out all 300ms;
+}
+.button:disabled {
+  filter: grayscale(1);
+  cursor: not-allowed;
+}
+.button:hover:not(:disabled) {
+  filter: saturate(4);
+}
+.button--primary {
+  background: var(--primary);
+  color: var(--on-primary);
+}
+.button--secondary {
+  background: var(--secondary);
+  color: var(--on-secondary);
+}
+.button--normal {
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  border-radius: 5px;
+}
