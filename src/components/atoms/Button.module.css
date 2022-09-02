@@ -2,7 +2,7 @@
   cursor: pointer;
   font-family: var(--font-default);
   border: none;
-  transition: ease-in-out all 300ms;
+  transition: ease-in-out all 150ms;
 }
 .button:disabled {
   filter: grayscale(1);
@@ -18,6 +18,11 @@
 .button--secondary {
   background: var(--secondary);
   color: var(--on-secondary);
+}
+.button--small {
+  padding: 0.2rem .5rem;
+  font-size: 0.8rem;
+  border-radius: 5px;
 }
 .button--normal {
   padding: 0.5rem 1rem;

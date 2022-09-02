@@ -1,13 +1,18 @@
-import { ComponentProps, FunctionComponent, PropsWithChildren } from "react";
 import { clsx } from "clsx";
+import {
+  ComponentProps,
+  FunctionComponent,
+  PropsWithChildren,
+  PropsWithoutRef,
+} from "react";
 
 import styles from "@/components/atoms/Button.module.css";
 
 type ButtonProps = PropsWithChildren<
   {
     variant?: "primary" | "secondary";
-    size?: "normal";
-  } & ComponentProps<"button">
+    size?: "normal" | "small";
+  } & PropsWithoutRef<ComponentProps<"button">>
 >;
 const Button: FunctionComponent<ButtonProps> = ({
   children,
