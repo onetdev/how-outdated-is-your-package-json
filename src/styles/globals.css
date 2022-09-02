@@ -1,7 +1,7 @@
 :root {
   --primary: #0070f3;
-  --on-primary: #fff;
-  --secondary: #fafafa;
+  --on-primary: #eee;
+  --secondary: #eee;
   --on-secondary: #000;
   --error: #f00;
   --on-error: #fff;
@@ -15,14 +15,14 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --primary: #0070f3;
-    --on-primary: #fff;
-    --secondary: #111;
-    --on-secondary: #fafafa;
-    --error: #f00;
-    --on-error: #fff;
-    --background: #222;
-    --on-background: #fff;
+    --primary: #0975f0;
+    --on-primary: #ececec;
+    --secondary: #ece1e1;
+    --on-secondary: #2b2828;
+    --error: #f33;
+    --on-error: #ececec;
+    --background: #111;
+    --on-background: #ececec;
   }
 
   html {

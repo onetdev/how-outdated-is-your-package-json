@@ -2,7 +2,7 @@ import { clsx } from "clsx";
 import Image from "next/image";
 import { ComponentProps, FunctionComponent, PropsWithChildren } from "react";
 
-import styles from "@/styles/Layout.module.css";
+import styles from "@/components/templates/MainLayout.module.css";
 
 type MainLayoutProps = PropsWithChildren<{
   className?: ComponentProps<"div">["className"];
