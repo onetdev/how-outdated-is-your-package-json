@@ -21,7 +21,7 @@ const ProgressBar: FunctionComponent<ProgressBarProps> = ({
 );
 
 const Container = styled.div`
-  background-color: var(--surface);
+  background-color: var(--background);
   width: 100%;
 `;
 const Bar = styled.div`

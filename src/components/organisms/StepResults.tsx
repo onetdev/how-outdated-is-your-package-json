@@ -1,3 +1,4 @@
+import { clsx } from "clsx";
 import { FunctionComponent } from "react";
 import DataTable, {
   ConditionalStyles,
@@ -6,7 +7,7 @@ import DataTable, {
 
 import Text from "@/components/atoms/Text";
 import StepSection from "@/components/molecules/StepSection";
-import styles from "@/components/organisms/StatTable.module.css";
+import styles from "@/components/organisms/StepResults.module.css";
 import { AgeInSeconds, PackageStatData } from "@/types";
 import dayjs from "@/utils/date";
 
@@ -44,10 +45,10 @@ const statColumns: TableColumn<PackageStatData>[] = [
     ),
   },
   {
-    name: "",
+    name: "Dev?",
     selector: (a) => a.isDev,
     sortable: true,
-    format: (a) => (a.isDev ? "dev" : ""),
+    format: (a) => (a.isDev ? "yes" : ""),
   },
   { name: "Target version", selector: (a) => a.targetVersion, compact: true },
   {
@@ -122,22 +123,28 @@ const StepResults: FunctionComponent<StepResultsProps> = ({
           defaultSortFieldId={"maxSatisfiedAge"}
         />
         <div className={styles.legend}>
-          <div>
+          <div className={styles.legendSection}>
             <span>Row colors</span>
-            <ul>
+            <ul className={styles.legendList}>
               <li>
-                <div className={styles.rowAlert}>&nbsp;</div>Target max is 3+
-                years old
+                <div className={clsx(styles.rowAlert, styles.legendColorBlock)}>
+                  &nbsp;
+                </div>{" "}
+                Target max is 3+ years old
               </li>
               <li>
-                <div className={styles.rowWarning}>&nbsp;</div>Target max is
-                1.5+ years old
+                <div
+                  className={clsx(styles.rowWarning, styles.legendColorBlock)}
+                >
+                  &nbsp;
+                </div>{" "}
+                Target max is 1.5+ years old
               </li>
             </ul>
           </div>
-          <div>
+          <div className={styles.legendSection}>
             <span>Status?</span>
-            <ul>
+            <ul className={styles.legendList}>
               <li>👻 - Haunting packages over 5 years of neglect</li>
               <li>💀 - 3 years, lost hope</li>
               <li>🧟 - Haven&#8217;t been touched in more than 1.5 years</li>

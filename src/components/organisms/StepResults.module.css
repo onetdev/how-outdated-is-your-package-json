@@ -1,0 +1,26 @@
+div.rowAlert {
+  background: #ff0000;
+}
+div.rowWarning {
+  background: #e79344;
+}
+div.rowGood {
+  background: #00ff00;
+}
+.legend {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  gap: var(--space-s);
+  margin: var(--space-s) 0 0 0;
+}
+.legendColorBlock {
+  display: inline-block;
+  width: 1rem;
+  height: 1rem;
+  border-radius: 0.25rem;
+}
+.legendList {
+  list-style: none;
+  padding: 0;
+}
