@@ -5,6 +5,9 @@
   --on-secondary: #222;
   --error: #f00;
   --on-error: #eee;
+  --success: #1ade1a;
+  --on-success: #222;
+  --on-error: #eee;
   --background: #eee;
   --on-background: #222;
   --surface: #eee;
@@ -14,6 +17,24 @@
   --font-default: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
     Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
 }
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --primary: #0975f0;
+    --on-primary: #ececec;
+    --secondary: #ece1e1;
+    --on-secondary: #2b2828;
+    --background: #111;
+    --on-background: #ececec;
+    --surface: #222;
+    --on-surface: #dedede;
+  }
+
+  html {
+    color-scheme: dark;
+  }
+}
+
 
 /* @link https://utopia.fyi/type/calculator?c=320,21,1.2,2500,24,1.25,6,4,&s=0.75|0.5|0.25,1.5|2|3|4|6,s-l */
 :root {
@@ -54,25 +75,6 @@
 
   /* Custom pairs */
   --space-s-l: clamp(1.31rem, calc(1.06rem + 1.24vw), 3.00rem);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --primary: #0975f0;
-    --on-primary: #ececec;
-    --secondary: #ece1e1;
-    --on-secondary: #2b2828;
-    --error: #f33;
-    --on-error: #ececec;
-    --background: #111;
-    --on-background: #ececec;
-    --surface: #222;
-    --on-surface: #dedede;
-  }
-
-  html {
-    color-scheme: dark;
-  }
 }
 
 html,

@@ -3,11 +3,16 @@ import { useEffect, useState } from "react";
 import { DependencyEntry } from "@/types";
 import sanitizeDependencyArray from "@/utils/sanitizeDependencyArray";
 
-type PackageParserProps = {
+export type PackageParserProps = {
   input: string | null;
 };
-
-const usePackageParser = ({ input }: PackageParserProps) => {
+export type PackageParserResult = {
+  dependencies: DependencyEntry[];
+  skipped: number;
+};
+const usePackageParser = ({
+  input,
+}: PackageParserProps): PackageParserResult => {
   const [dependencies, setDependencies] = useState<DependencyEntry[]>([]);
   const [skipped, setSkipped] = useState<number>(0);
 

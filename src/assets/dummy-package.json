@@ -5,6 +5,7 @@
   "private": true,
   "scripts": {},
   "dependencies": {
+    "skipped": "https://this.will.be.skipped.com",
     "lodash": "4.17.19",
     "moment": "1.1.0",
     "react-native": "0.64.2",

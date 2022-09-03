@@ -1,0 +1,8 @@
+.text {
+  font-family: var(--font-default);
+  font-size: 1rem;
+  line-height: 1.4;
+}
+.text--small {
+  font-size: var(--step--2);
+}

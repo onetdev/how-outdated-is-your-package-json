@@ -4,6 +4,8 @@ import DataTable, {
   TableColumn,
 } from "react-data-table-component";
 
+import Text from "@/components/atoms/Text";
+import StepSection from "@/components/molecules/StepSection";
 import styles from "@/components/organisms/StatTable.module.css";
 import { AgeInSeconds, PackageStatData } from "@/types";
 import dayjs from "@/utils/date";
@@ -100,45 +102,53 @@ const statColumns: TableColumn<PackageStatData>[] = [
   },
 ];
 
-type StatTableProps = { data: PackageStatData[] };
-const StatTable: FunctionComponent<StatTableProps> = ({ data }) => (
-  <>
-    <DataTable
-      columns={statColumns}
-      data={data}
-      dense
-      fixedHeader
-      pagination
-      paginationPerPage={15}
-      theme="dark"
-      defaultSortFieldId={"maxSatisfiedAge"}
-    />
-    <div className={styles.legend}>
-      <div>
-        <span>Row colors</span>
-        <ul>
-          <li>
-            <div className={styles.rowAlert}>&nbsp;</div>Target max is 3+ years
-            old
-          </li>
-          <li>
-            <div className={styles.rowWarning}>&nbsp;</div>Target max is 1.5+
-            years old
-          </li>
-        </ul>
-      </div>
-      <div>
-        <span>Status?</span>
-        <ul>
-          <li>👻 - Haunting packages over 5 years of neglect</li>
-          <li>💀 - 3 years, lost hope</li>
-          <li>🧟 - Haven&#8217;t been touched in more than 1.5 years</li>
-          <li>👍 - Okay</li>
-          <li>🔥 - Pretty fresh</li>
-        </ul>
-      </div>
-    </div>
-  </>
+type StepResultsProps = { className?: string; data: PackageStatData[] };
+const StepResults: FunctionComponent<StepResultsProps> = ({
+  className,
+  data,
+}) => (
+  <StepSection className={className} title="3. Results">
+    {data?.length < 1 && <Text>Complete the previous step first.</Text>}
+    {data?.length > 0 && (
+      <>
+        <DataTable
+          columns={statColumns}
+          data={data}
+          dense
+          fixedHeader
+          pagination
+          paginationPerPage={15}
+          theme="dark"
+          defaultSortFieldId={"maxSatisfiedAge"}
+        />
+        <div className={styles.legend}>
+          <div>
+            <span>Row colors</span>
+            <ul>
+              <li>
+                <div className={styles.rowAlert}>&nbsp;</div>Target max is 3+
+                years old
+              </li>
+              <li>
+                <div className={styles.rowWarning}>&nbsp;</div>Target max is
+                1.5+ years old
+              </li>
+            </ul>
+          </div>
+          <div>
+            <span>Status?</span>
+            <ul>
+              <li>👻 - Haunting packages over 5 years of neglect</li>
+              <li>💀 - 3 years, lost hope</li>
+              <li>🧟 - Haven&#8217;t been touched in more than 1.5 years</li>
+              <li>👍 - Okay</li>
+              <li>🔥 - Pretty fresh</li>
+            </ul>
+          </div>
+        </div>
+      </>
+    )}
+  </StepSection>
 );
 
-export default StatTable;
+export default StepResults;

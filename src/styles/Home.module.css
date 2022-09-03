@@ -1,7 +1,6 @@
 .container {
   padding: 0 2rem;
 }
-
 .title {
   margin: 0;
   line-height: 1.15;
@@ -16,15 +15,6 @@
   line-height: 1.5;
   font-size: 1.5rem;
 }
-.jsonInput {
-  width: 100%;
-  position: relative;
-}
-.jsonDummyButton {
-  position: absolute;
-  right: .5rem;
-  bottom: .5rem;
-}
 .code {
   font-family: var(--font-monospace);
 }
@@ -32,25 +22,9 @@
   display: grid;
   grid-template: "a" "b" "c";
 }
-.stepSection {
-  margin: 1rem;
-  padding: var(--space-s-m);
-  text-align: left;
-  border: 1px solid var(--on-background);
-  border-radius: 10px;
-}
 .stepSection--step1 { grid-area: a; }
 .stepSection--step2 { grid-area: b; }
 .stepSection--step3 { grid-area: c; }
-.stepSection h2 {
-  margin: 0 0 1rem 0;
-  font-size: 1.5rem;
-}
-.stepSection p {
-  margin: 0;
-  font-size: 1rem;
-  line-height: 1.4;
-}
 .statContainer {
   display: flex;
   align-items: center;

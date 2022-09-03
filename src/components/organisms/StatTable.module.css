@@ -7,7 +7,6 @@ div.rowWarning {
 div.rowGood {
   background: #00ff00;
 }
-
 .legend {
   display: flex;
   flex-direction: row;
