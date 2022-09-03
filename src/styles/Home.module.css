@@ -1,19 +1,15 @@
-.container {
-  padding: 0 2rem;
-}
 .title {
-  margin: 0;
+  margin: var(--space-2xl-3xl) var(--space-s-m);
+  font-size: var(--step-4);
   line-height: 1.15;
-  font-size: 4rem;
-}
-.title,
-.description {
   text-align: center;
 }
-.description {
-  margin: 4rem 0;
+.intro {
+  margin: var(--space-2xl-3xl) auto;
+  text-align: center;
+  max-width: 800px;
   line-height: 1.5;
-  font-size: 1.5rem;
+  font-size: var(--step--1);
 }
 .code {
   font-family: var(--font-monospace);

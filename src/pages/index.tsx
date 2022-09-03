@@ -31,12 +31,12 @@ const Home: FunctionComponent = () => {
         How old is my <code className={styles.code}>package.json?</code>
       </h1>
 
-      <p className={styles.description}>
+      <div className={styles.intro}>
         We&#8217;ve all been there: &#8220;Don&#8217;t touch if it works&#8221;.
         But how depressingly outdated is your project really? Wait no more! I am
         here to let you know and it might even help you to convince your PM, PO,
         LD, TC, WTH to actually allocate time for upgrading.
-      </p>
+      </div>
 
       <div className={styles.stepContainer}>
         <StepPackage

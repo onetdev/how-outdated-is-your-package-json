@@ -1,5 +1,5 @@
 .wrapper {
-  padding: 0 2rem;
+  padding: 0 var(--space-m-l);
   min-height: 100vh;
 }
 .footer {

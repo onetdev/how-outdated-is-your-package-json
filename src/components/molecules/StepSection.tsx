@@ -1,7 +1,5 @@
-import { clsx } from "clsx";
 import { FunctionComponent, PropsWithChildren, ReactNode } from "react";
-
-import styles from "@/components/molecules/StepSection.module.css";
+import styled from "styled-components";
 
 type StepSectionProps = PropsWithChildren<{
   title?: ReactNode;
@@ -12,10 +10,21 @@ const StepSection: FunctionComponent<StepSectionProps> = ({
   children,
   className,
 }) => (
-  <section className={clsx(styles.container, className)}>
-    {title && <h2 className={styles["container__title"]}>{title}</h2>}
+  <Container className={className}>
+    {title && <Title>{title}</Title>}
     {children}
-  </section>
+  </Container>
 );
+
+const Container = styled.section`
+  padding: var(--space-s-m);
+  margin: var(--space-3xs);
+  text-align: left;
+  background: var(--surface);
+`;
+const Title = styled.h2`
+  margin: 0 0 1rem 0;
+  font-size: 1.5rem;
+`;
 
 export default StepSection;
