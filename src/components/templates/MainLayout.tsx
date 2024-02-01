@@ -14,7 +14,7 @@ const MainLayout: FunctionComponent<MainLayoutProps> = ({
   const style = clsx([styles.container, className]);
 
   const links = [
-    { href: "https://onet.dev", children: "Jozsef Koller" },
+    { href: "https://onet.dev", children: "Konrad Koller" },
     {
       href: "https://buymeacoffee.com/onetdev",
       children: "Sponsor my addiction",
