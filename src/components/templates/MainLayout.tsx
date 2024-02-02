@@ -20,7 +20,7 @@ const MainLayout: FunctionComponent<MainLayoutProps> = ({
       children: "Sponsor my addiction",
     },
     {
-      href: "https://github.com/orosznyet/how-old-is-my-package",
+      href: "https://github.com/onetdev/how-outdated-is-your-package-json",
       children: "GitHub source",
     },
     {

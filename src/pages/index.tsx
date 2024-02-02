@@ -21,7 +21,7 @@ const Home: FunctionComponent = () => {
   return (
     <MainLayout>
       <Head>
-        <title>How old is my package.json?</title>
+        <title>How outdated is your package.json?</title>
         <meta
           name="description"
           content="Probably the best way to tell if you app is using old af packages."
@@ -32,7 +32,8 @@ const Home: FunctionComponent = () => {
       <div className={styles.container}>
         <div className={styles.header}>
           <h1 className={styles.title}>
-            How old is my <code className={styles.code}>package.json?</code>
+            How outdated is your{" "}
+            <code className={styles.code}>package.json?</code>
           </h1>
 
           <div className={styles.intro}>
