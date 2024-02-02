@@ -6,13 +6,23 @@ import {
   useRef,
   useState,
 } from "react";
-import { createNoise2D } from "simplex-noise";
+import { NoiseFunction2D, createNoise2D } from "simplex-noise";
 import styled from "styled-components";
 
 import * as Vec from "@/utils/vector2";
 
+type PathDescriptor = {
+  points: Vec.Vector2[];
+  noise: NoiseFunction2D;
+};
+type InterpolatedPathDescriptor = PathDescriptor & {
+  points: Vec.Vector2[];
+  segments: Vec.Vector2[][];
+  lerps: Vec.Vector2[];
+};
+
 const AnimatedBackground: FunctionComponent = () => {
-  const noise = useMemo(() => createNoise2D(), []);
+  const isDev = process.env.NODE_ENV === "development";
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [frameDeltaHistory, setFrameDeltaHistory] = useState<number[]>([]);
   const canvasCtx = useMemo(
@@ -28,7 +38,7 @@ const AnimatedBackground: FunctionComponent = () => {
       globalDecay: 0.65, // [0,1]
       distanceHeightFactor: 0.3, // [0-1]
       speed: 0.001,
-      opacityNoiseFactor: 0.02,
+      opacityNoiseFactor: 0.05,
       wiggle: 5,
     }),
     [canvasRef.current?.width]
@@ -42,65 +52,79 @@ const AnimatedBackground: FunctionComponent = () => {
     return img;
   }, []);
 
-  const paths = useMemo<{ color: string; points: Vec.Vector2[][] }[]>(
+  // every even vector is a control point, will be transformed into quadratic
+  // bezier curve
+  const pathsBase = useMemo<PathDescriptor[]>(
     () => [
       {
-        color: "rgb(255, 0, 255)",
+        noise: createNoise2D(),
         points: [
-          [
-            [10, -5],
-            [0, 10],
-            [40, 15],
-          ],
-          [
-            [40, 15],
-            [80, 20],
-            [50, 25],
-          ],
-          [
-            [50, 25],
-            [30, 30],
-            [100, 35],
-          ],
+          [10, -5],
+          [0, 10],
+          [40, 15],
+          [80, 20],
+          [50, 25],
+          [30, 30],
+          [100, 35],
         ],
       },
       {
-        color: "rgb(255, 255, 0)",
+        noise: createNoise2D(),
         points: [
-          [
-            [25, -5],
-            [5, 10],
-            [50, 10],
-          ],
-          [
-            [50, 10],
-            [85, 10],
-            [75, 20],
-          ],
-          [
-            [75, 20],
-            [60, 30],
-            [100, 30],
-          ],
+          [25, -5],
+          [5, 10],
+          [50, 10],
+          [85, 10],
+          [75, 20],
+          [60, 30],
+          [100, 30],
         ],
       },
       {
-        color: "rgb(0, 255, 255)",
+        noise: createNoise2D(),
         points: [
-          [
-            [-5, 15],
-            [40, 15],
-            [10, 25],
-          ],
-          [
-            [10, 25],
-            [0, 28],
-            [30, 35],
-          ],
+          [-5, 15],
+          [40, 15],
+          [10, 25],
+          [0, 28],
+          [30, 35],
         ],
       },
     ],
     []
+  );
+
+  const paths = useMemo<InterpolatedPathDescriptor[]>(
+    () =>
+      pathsBase.map((x) => {
+        if (x.points.length % 2 === 0) {
+          throw new Error("Segments must be odd!");
+        }
+
+        const segments = [];
+        const lerps = [];
+        for (let i = 0; i < Math.floor(x.points.length / 2); i++) {
+          const segment = x.points.slice(i * 2, i * 2 + 3);
+          segments.push(segment);
+        }
+
+        for (let i = 0; i < segments.length; i++) {
+          for (let j = 0; j < config.lerpSteps; j++) {
+            const b = Vec.quadraticBezierCurve(
+              segments[i],
+              j / config.lerpSteps
+            );
+            lerps.push(b);
+          }
+        }
+
+        return {
+          ...x,
+          segments,
+          lerps,
+        };
+      }),
+    [pathsBase, config.lerpSteps]
   );
 
   const avg = (items: number[]) =>
@@ -121,38 +145,32 @@ const AnimatedBackground: FunctionComponent = () => {
 
       for (let i = 0; i < paths.length; i++) {
         const path = paths[i];
-        let pathDrawIndex = 0;
-        const pointCount = path.points.length * config.lerpSteps;
-        for (let j = 0; j < path.points.length; j++) {
-          for (let k = 0; k < config.lerpSteps; k++) {
-            const distance = 1 - pathDrawIndex / pointCount;
-            const distanceHeightFactor =
-              1 - config.distanceHeightFactor * distance;
-            const b = Vec.quadraticBezierCurve(
-              path.points[j],
-              k / config.lerpSteps
-            );
-            const pointNoise = noise(
-              i * 10,
-              (clock.frameCount + pathDrawIndex) * config.speed
-            );
-            const opacity =
-              (1 + pointNoise) * config.opacityNoiseFactor * distance;
-            canvasCtx.globalAlpha = opacity;
-            canvasCtx.drawImage(
-              image,
-              b[0] * config.scale + config.wiggle * pointNoise,
-              b[1] * config.scale + config.wiggle * pointNoise,
-              10 * config.scale,
-              25 * config.scale * distanceHeightFactor
-            );
-            pathDrawIndex++;
-          }
+        const pointCount = path.lerps.length;
+
+        for (let j = 0; j < path.lerps.length; j++) {
+          const b = path.lerps[j];
+          const distance = 1 - j / pointCount;
+          const distanceHeightFactor =
+            1 - config.distanceHeightFactor * distance;
+          const pointNoise = path.noise(
+            i * 10,
+            (clock.frameCount + j) * config.speed
+          );
+          const opacity =
+            (1 + pointNoise) * config.opacityNoiseFactor * distance;
+          canvasCtx.globalAlpha = opacity;
+          canvasCtx.drawImage(
+            image,
+            b[0] * config.scale + config.wiggle * pointNoise,
+            b[1] * config.scale + config.wiggle * pointNoise,
+            10 * config.scale,
+            25 * config.scale * distanceHeightFactor
+          );
         }
       }
       canvasCtx.globalAlpha = 1;
     },
-    [canvasCtx, config, noise]
+    [canvasCtx, config]
   );
 
   useEffect(() => {
@@ -192,7 +210,7 @@ const AnimatedBackground: FunctionComponent = () => {
 
   return (
     <Container>
-      {frameDeltaHistory.length > 0 && (
+      {isDev && frameDeltaHistory.length > 0 && (
         <FpsCounter>{Math.round(1000 / avg(frameDeltaHistory))}</FpsCounter>
       )}
       <Canvas ref={canvasRef} />
