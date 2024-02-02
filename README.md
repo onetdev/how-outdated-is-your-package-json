@@ -1,13 +1,11 @@
-# How old is your package.json?
+# How outdated is your package.json?
 
-Quick, fast, small, secure and informative tool for analyzing the age of your `package.json` dependencies. It only analyses top level dependencies to avoid complexity and while keeping.
+Quick, fast, small, secure - since it works on the client side - and informative tool for analyzing the age of your `package.json` dependencies. It only analyses top level dependencies to avoid complexity.
 
-In the future it might get a CLI version too since the core logic is in TS.
-
-[![Netlify Status](https://api.netlify.com/api/v1/badges/0256c22c-579a-44d5-958c-05adb341130c/deploy-status)](https://app.netlify.com/sites/how-old-is-your-package/deploys)
+![Vercel Deploy](https://therealsujitk-vercel-badge.vercel.app/?app=how-old-is-my-package&style=for-the-badge)
 
 ## Tech
 
 - [Next.JS](https://nextjs.org)
-- [Netlify](https://netlify.com)
+- [Vercel](https://vercel.com)
 - [TypeScript](https://typescriptlang.org)
