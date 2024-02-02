@@ -1,7 +1,9 @@
 .wrapper {
   padding: 0 var(--space-m-l);
   min-height: 100vh;
+  background: linear-gradient(180deg, #142019 0%, #101813 100%);
 }
+
 .footer {
   display: flex;
   flex: 1;
@@ -10,6 +12,7 @@
   justify-content: center;
   align-items: center;
 }
+
 .footer a {
   display: flex;
   justify-content: center;
