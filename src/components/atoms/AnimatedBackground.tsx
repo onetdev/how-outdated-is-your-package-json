@@ -20,6 +20,11 @@ type InterpolatedPathDescriptor = PathDescriptor & {
   segments: Vec.Vector2[][];
   lerps: Vec.Vector2[];
 };
+type RenderStats = {
+  delta: number;
+  elapsed: number;
+  frameCount: number;
+};
 
 const AnimatedBackground: FunctionComponent = () => {
   const isDev = process.env.NODE_ENV === "development";
@@ -34,22 +39,25 @@ const AnimatedBackground: FunctionComponent = () => {
   const config = useMemo(
     () => ({
       scale: (canvasRef.current?.width || 100) / 100,
-      lerpSteps: 80,
+      lerpSteps: 150,
       globalDecay: 0.65, // [0,1]
-      distanceHeightFactor: 0.3, // [0-1]
+      distanceHeightFactor: 0.6, // [0-1]
       speed: 0.001,
       opacityNoiseFactor: 0.05,
-      wiggle: 5,
+      wiggle: 20,
     }),
     [canvasRef.current?.width]
   );
 
-  const image = useMemo(() => {
+  const images = useMemo(() => {
     if (typeof window === "undefined") return null;
 
-    const img = new Image();
-    img.src = "./aurora-drop.png";
-    return img;
+    // render automatically pulles new items.
+    return ["./aurora-drop-a.png"].map((x) => {
+      const img = new Image();
+      img.src = x;
+      return img;
+    });
   }, []);
 
   // every even vector is a control point, will be transformed into quadratic
@@ -59,7 +67,7 @@ const AnimatedBackground: FunctionComponent = () => {
       {
         noise: createNoise2D(),
         points: [
-          [10, -5],
+          [10, -15],
           [0, 10],
           [40, 15],
           [80, 20],
@@ -86,7 +94,7 @@ const AnimatedBackground: FunctionComponent = () => {
           [-5, 15],
           [40, 15],
           [10, 25],
-          [0, 28],
+          [0, 30],
           [30, 35],
         ],
       },
@@ -131,46 +139,55 @@ const AnimatedBackground: FunctionComponent = () => {
     items.reduce((a, b) => a + b, 0) / items.length;
   const rand = (min: number, max: number) => Math.random() * (max - min) + min;
 
-  const draw = useCallback(
-    (clock: { delta: number; elapsed: number; frameCount: number }) => {
-      const width = canvasRef.current.width;
-      const height = canvasRef.current.height;
+  const applyDecay = useCallback(() => {
+    if (!canvasRef.current || !canvasCtx) return;
 
-      if (config.globalDecay > 0) {
-        canvasCtx.globalCompositeOperation = "destination-in";
-        canvasCtx.fillStyle = "rgba(0, 0, 0, " + (1 - config.globalDecay) + ")";
-        canvasCtx.fillRect(0, 0, width, height);
-        canvasCtx.globalCompositeOperation = "source-over";
+    const width = canvasRef.current.width;
+    const height = canvasRef.current.height;
+
+    if (config.globalDecay > 0) {
+      canvasCtx.globalCompositeOperation = "destination-in";
+      canvasCtx.fillStyle = "rgba(0, 0, 0, " + (1 - config.globalDecay) + ")";
+      canvasCtx.fillRect(0, 0, width, height);
+      canvasCtx.globalCompositeOperation = "source-over";
+    }
+  }, [config.globalDecay, canvasCtx]);
+
+  const drawPath = useCallback(
+    (path: InterpolatedPathDescriptor, offset: number) => {
+      if (!canvasRef.current || !canvasCtx) return;
+
+      const pointCount = path.lerps.length;
+      for (let i = 0; i < pointCount; i++) {
+        const vec = path.lerps[i];
+        const pointNoise = path.noise(1, (offset + i) * config.speed);
+        const distance = 1 - i / pointCount; // 0-1
+
+        const opacity = (1 + pointNoise) * config.opacityNoiseFactor * distance;
+        canvasCtx.globalAlpha = opacity;
+
+        canvasCtx.drawImage(
+          images[i % images.length],
+          vec[0] * config.scale + config.wiggle * pointNoise,
+          vec[1] * config.scale + config.wiggle * pointNoise,
+          10 * config.scale,
+          25 * config.scale * config.distanceHeightFactor * distance
+        );
       }
+    },
+    [canvasCtx, config, images]
+  );
+
+  const draw = useCallback(
+    (clock: RenderStats) => {
+      applyDecay();
 
       for (let i = 0; i < paths.length; i++) {
-        const path = paths[i];
-        const pointCount = path.lerps.length;
-
-        for (let j = 0; j < path.lerps.length; j++) {
-          const b = path.lerps[j];
-          const distance = 1 - j / pointCount;
-          const distanceHeightFactor =
-            1 - config.distanceHeightFactor * distance;
-          const pointNoise = path.noise(
-            i * 10,
-            (clock.frameCount + j) * config.speed
-          );
-          const opacity =
-            (1 + pointNoise) * config.opacityNoiseFactor * distance;
-          canvasCtx.globalAlpha = opacity;
-          canvasCtx.drawImage(
-            image,
-            b[0] * config.scale + config.wiggle * pointNoise,
-            b[1] * config.scale + config.wiggle * pointNoise,
-            10 * config.scale,
-            25 * config.scale * distanceHeightFactor
-          );
-        }
+        drawPath(paths[i], clock.frameCount);
       }
       canvasCtx.globalAlpha = 1;
     },
-    [canvasCtx, config]
+    [applyDecay, canvasCtx, drawPath, config]
   );
 
   useEffect(() => {
