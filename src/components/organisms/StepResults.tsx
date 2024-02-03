@@ -4,6 +4,7 @@ import DataTable, {
   ConditionalStyles,
   TableColumn,
 } from "react-data-table-component";
+import { ExternalLink } from "lucide-react";
 
 import Text from "@/components/atoms/Text";
 import StepSection from "@/components/molecules/StepSection";
@@ -17,7 +18,7 @@ const humanizeAge = (age: AgeInSeconds) =>
 const isAgeAlert = (age: AgeInSeconds) => age > YEAR_SECONDS * 3;
 const isAgeWarning = (age: AgeInSeconds) => age > YEAR_SECONDS * 1.5;
 const ageColorStyle = (
-  selector: (row: PackageStatData) => AgeInSeconds
+  selector: (row: PackageStatData) => AgeInSeconds,
 ): ConditionalStyles<PackageStatData>[] => [
   {
     when: (row) => isAgeAlert(selector(row)),
@@ -40,6 +41,8 @@ const statColumns: TableColumn<PackageStatData>[] = [
         target="_blank"
         rel="noopener noreferrer"
       >
+        <ExternalLink size={12} />
+        &nbsp;
         {a.package}
       </a>
     ),
@@ -48,6 +51,8 @@ const statColumns: TableColumn<PackageStatData>[] = [
     name: "Dev?",
     selector: (a) => a.isDev,
     sortable: true,
+    compact: true,
+    center: true,
     format: (a) => (a.isDev ? "yes" : ""),
   },
   { name: "Target version", selector: (a) => a.targetVersion, compact: true },

@@ -5,6 +5,7 @@ import {
   useRef,
 } from "react";
 import { styled } from "styled-components";
+import { WandIcon } from "lucide-react";
 
 import dummy from "@/assets/dummy-package.json";
 import Button from "@/components/atoms/Button";
@@ -54,13 +55,8 @@ const StepPackage: FunctionComponent<StepPackageProps> = ({
           rows={16}
         />
         <DummyButtonWrap>
-          <Button
-            size="small"
-            variant="secondary"
-            className={styles.jsonDummyButton}
-            onClick={handleDummyFill}
-          >
-            Use demo <code>package.json</code>
+          <Button size="normal" variant="rainbow" onClick={handleDummyFill}>
+            <WandIcon size={13} /> Use demo <code>package.json</code>
           </Button>
         </DummyButtonWrap>
       </InputWrap>
@@ -88,7 +84,7 @@ const InputWrap = styled.div`
 const DummyButtonWrap = styled.div`
   position: absolute;
   right: 0.75rem;
-  bottom: 0.5rem;
+  bottom: 1rem;
   white-space: nowrap;
 `;
 
