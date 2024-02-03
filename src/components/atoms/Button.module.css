@@ -19,6 +19,10 @@
   background: var(--secondary);
   color: var(--on-secondary);
 }
+.button--rainbow {
+  background: linear-gradient(75deg, #0dba61, #06bce5);
+  color: #042d2b;
+}
 .button--small {
   padding: 0.2rem .5rem;
   font-size: 0.8rem;

@@ -10,7 +10,7 @@ import styles from "@/components/atoms/Button.module.css";
 
 type ButtonProps = PropsWithChildren<
   {
-    variant?: "primary" | "secondary";
+    variant?: "rainbow" | "primary" | "secondary";
     size?: "normal" | "small";
   } & PropsWithoutRef<ComponentProps<"button">>
 >;
@@ -25,7 +25,7 @@ const Button: FunctionComponent<ButtonProps> = ({
     styles.button,
     styles[`button--${variant}`],
     styles[`button--${size}`],
-    className
+    className,
   );
 
   return (
