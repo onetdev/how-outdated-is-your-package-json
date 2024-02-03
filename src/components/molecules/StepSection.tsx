@@ -17,14 +17,16 @@ const StepSection: FunctionComponent<StepSectionProps> = ({
 );
 
 const Container = styled.section`
-  padding: var(--space-s-m);
+  backdrop-filter: blur(5px);
+  background: rgba(var(--surface), 0.5);
   margin: var(--space-3xs);
+  padding: var(--space-s-m);
   text-align: left;
-  background: var(--surface);
+  border-radius: var(--space-3xs);
 `;
 const Title = styled.h2`
-  margin: 0 0 1rem 0;
   font-size: 1.5rem;
+  margin: 0 0 1rem 0;
 `;
 
 export default StepSection;

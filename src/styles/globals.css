@@ -10,7 +10,7 @@
   --on-error: #eee;
   --background: #eee;
   --on-background: #222;
-  --surface: #eee;
+  --surface: 238, 238, 238;
   --on-surface: #222;
   --font-monospace: Menlo, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono,
   Bitstream Vera Sans Mono, Courier New, monospace;
@@ -26,7 +26,7 @@
     --on-secondary: #2b2828;
     --background: #111;
     --on-background: #ececec;
-    --surface: #222;
+    --surface: 34, 34, 34;
     --on-surface: #dedede;
   }
 
