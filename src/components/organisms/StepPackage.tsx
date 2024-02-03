@@ -56,7 +56,8 @@ const StepPackage: FunctionComponent<StepPackageProps> = ({
         />
         <DummyButtonWrap>
           <Button size="normal" variant="rainbow" onClick={handleDummyFill}>
-            <WandIcon size={13} /> Use demo <code>package.json</code>
+            <WandIcon size={"1rem"} />
+            &nbsp; Use demo <code>package.json</code>
           </Button>
         </DummyButtonWrap>
       </InputWrap>

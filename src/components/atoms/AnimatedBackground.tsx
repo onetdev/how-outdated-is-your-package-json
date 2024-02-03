@@ -246,7 +246,7 @@ const AnimatedBackground: FunctionComponent = () => {
       }
       canvasCtx.globalAlpha = 1;
     },
-    [applyDecay, canvasCtx, drawStars, paths, drawPath, config],
+    [applyDecay, canvasCtx, drawStars, paths, drawPath],
   );
 
   useEffect(() => {

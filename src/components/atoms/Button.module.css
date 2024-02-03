@@ -3,6 +3,8 @@
   font-family: var(--font-default);
   border: none;
   transition: ease-in-out all 150ms;
+  align-items: center;
+    display: flex;
 }
 .button:disabled {
   filter: grayscale(1);

@@ -4,13 +4,14 @@ import DataTable, {
   ConditionalStyles,
   TableColumn,
 } from "react-data-table-component";
-import { ExternalLink } from "lucide-react";
+import { DownloadIcon, ExternalLink } from "lucide-react";
 
 import Text from "@/components/atoms/Text";
 import StepSection from "@/components/molecules/StepSection";
 import styles from "@/components/organisms/StepResults.module.css";
 import { AgeInSeconds, PackageStatData } from "@/types";
 import dayjs from "@/utils/date";
+import Button from "@/components/atoms/Button";
 
 const YEAR_SECONDS = 365 * 24 * 60 * 60;
 const humanizeAge = (age: AgeInSeconds) =>
@@ -113,7 +114,11 @@ const StepResults: FunctionComponent<StepResultsProps> = ({
   className,
   data,
 }) => (
-  <StepSection className={className} title="3. Results">
+  <StepSection
+    className={className}
+    titleAction={data?.length ? <DownloadButton data={data} /> : null}
+    title="3. Results"
+  >
     {data?.length < 1 && <Text>Complete the previous step first.</Text>}
     {data?.length > 0 && (
       <>
@@ -124,6 +129,7 @@ const StepResults: FunctionComponent<StepResultsProps> = ({
           fixedHeader
           pagination
           paginationPerPage={15}
+          paginationRowsPerPageOptions={[10, 15, 30, 50, 100, 200]}
           theme="dark"
           defaultSortFieldId={"maxSatisfiedAge"}
         />
@@ -162,5 +168,30 @@ const StepResults: FunctionComponent<StepResultsProps> = ({
     )}
   </StepSection>
 );
+
+type DownloadButtonProps = { data: PackageStatData[] };
+const DownloadButton: FunctionComponent<DownloadButtonProps> = ({ data }) => {
+  const fileName = `package-stats-${new Date().toISOString()}.json`;
+  const download = function () {
+    const a = document.createElement("a");
+    document.body.appendChild(a);
+    a.style.display = "none";
+
+    const json = JSON.stringify(data),
+      blob = new Blob([json], { type: "octet/stream" }),
+      url = window.URL.createObjectURL(blob);
+    a.href = url;
+    a.download = fileName;
+    a.click();
+    window.URL.revokeObjectURL(url);
+  };
+
+  return (
+    <Button size="normal" variant="rainbow" onClick={download}>
+      <DownloadIcon size={"1rem"} />
+      &nbsp; Download
+    </Button>
+  );
+};
 
 export default StepResults;

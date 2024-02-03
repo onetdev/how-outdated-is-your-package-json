@@ -3,15 +3,22 @@ import { styled } from "styled-components";
 
 type StepSectionProps = PropsWithChildren<{
   title?: ReactNode;
+  titleAction?: ReactNode;
   className?: string;
 }>;
 const StepSection: FunctionComponent<StepSectionProps> = ({
   title,
   children,
   className,
+  titleAction,
 }) => (
   <Container className={className}>
-    {title && <Title>{title}</Title>}
+    {title && (
+      <TitleWrap>
+        <Title>{title}</Title>
+        {titleAction}
+      </TitleWrap>
+    )}
     {children}
   </Container>
 );
@@ -24,9 +31,15 @@ const Container = styled.section`
   text-align: left;
   border-radius: var(--space-3xs);
 `;
+const TitleWrap = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0 0 1rem 0;
+`;
 const Title = styled.h2`
   font-size: 1.5rem;
-  margin: 0 0 1rem 0;
+  margin: 0;
 `;
 
 export default StepSection;
