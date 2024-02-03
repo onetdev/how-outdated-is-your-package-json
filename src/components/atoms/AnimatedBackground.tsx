@@ -37,22 +37,26 @@ const AnimatedBackground: FunctionComponent = () => {
   const canvasCtx = useMemo(
     () => canvasRef.current?.getContext("2d"),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [canvasRef.current]
+    [canvasRef.current],
   );
 
   const config = useMemo(
     () => ({
       scale: (canvasRef.current?.width || 100) / 100,
-      lerpSteps: 150,
-      globalDecay: 0.65, // [0,1]
-      distanceHeightFactor: 0.6, // [0-1]
-      speed: 0.001,
-      opacityNoiseFactor: 0.05,
-      wiggle: 20,
-      starCount: 200,
-      starFlickerDepth: 2,
+      frameDecay: 0.65, // [0,1]
+      aurora: {
+        distanceHeightFactor: 0.6, // [0-1]
+        lerpSteps: 150, // number of stripes rendered on a curve (regardless of its length)
+        noiseAmplitude: 0.001, // affects core noise speed and range
+        opacityNoiseFactor: 4, // [0,100]
+        wiggleAmplitude: 20, // [0,∞] range of wobble
+      },
+      star: {
+        flickerDepth: 1.5,
+        limit: 1000,
+      },
     }),
-    [canvasRef.current?.width]
+    [canvasRef.current?.width],
   );
 
   const starConfig: {
@@ -62,13 +66,13 @@ const AnimatedBackground: FunctionComponent = () => {
     vec: Vec.Vector2;
   }[] = useMemo(
     () =>
-      Array.from({ length: config.starCount }, () => ({
-        flickerRate: rand(0, 10),
+      Array.from({ length: config.star.limit }, () => ({
+        flickerRate: rand(0, 10) === 1 ? rand(1, 10) : 0,
         opacity: rand(0, 1),
-        size: rand(1, 2),
+        size: rand(0.5, 1.5),
         vec: [rand(0, 100), rand(0, 100)],
       })),
-    [config.starCount]
+    [config.star.limit],
   );
 
   const images = useMemo(() => {
@@ -121,7 +125,7 @@ const AnimatedBackground: FunctionComponent = () => {
         ],
       },
     ],
-    []
+    [],
   );
 
   const paths = useMemo<InterpolatedPathDescriptor[]>(
@@ -139,10 +143,10 @@ const AnimatedBackground: FunctionComponent = () => {
         }
 
         for (let i = 0; i < segments.length; i++) {
-          for (let j = 0; j < config.lerpSteps; j++) {
+          for (let j = 0; j < config.aurora.lerpSteps; j++) {
             const b = Vec.quadraticBezierCurve(
               segments[i],
-              j / config.lerpSteps
+              j / config.aurora.lerpSteps,
             );
             lerps.push(b);
           }
@@ -154,7 +158,7 @@ const AnimatedBackground: FunctionComponent = () => {
           lerps,
         };
       }),
-    [pathsBase, config.lerpSteps]
+    [pathsBase, config.aurora],
   );
 
   const applyDecay = useCallback(() => {
@@ -163,13 +167,13 @@ const AnimatedBackground: FunctionComponent = () => {
     const width = canvasRef.current.width;
     const height = canvasRef.current.height;
 
-    if (config.globalDecay > 0) {
+    if (config.frameDecay > 0) {
       canvasCtx.globalCompositeOperation = "destination-in";
-      canvasCtx.fillStyle = "rgba(0, 0, 0, " + (1 - config.globalDecay) + ")";
+      canvasCtx.fillStyle = "rgba(0, 0, 0, " + (1 - config.frameDecay) + ")";
       canvasCtx.fillRect(0, 0, width, height);
       canvasCtx.globalCompositeOperation = "source-over";
     }
-  }, [config.globalDecay, canvasCtx]);
+  }, [config.frameDecay, canvasCtx]);
 
   const drawPath = useCallback(
     (path: InterpolatedPathDescriptor, offset: number) => {
@@ -178,22 +182,28 @@ const AnimatedBackground: FunctionComponent = () => {
       const pointCount = path.lerps.length;
       for (let i = 0; i < pointCount; i++) {
         const vec = path.lerps[i];
-        const pointNoise = path.noise(1, (offset + i) * config.speed);
+        const pointNoise = path.noise(
+          1,
+          (offset + i) * config.aurora.noiseAmplitude,
+        );
         const distance = 1 - i / pointCount; // 0-1
 
-        const opacity = (1 + pointNoise) * config.opacityNoiseFactor * distance;
+        const opacity =
+          (1 + pointNoise) *
+          (config.aurora.opacityNoiseFactor / 100) *
+          distance;
         canvasCtx.globalAlpha = opacity;
 
         canvasCtx.drawImage(
           images[i % images.length],
-          vec[0] * config.scale + config.wiggle * pointNoise,
-          vec[1] * config.scale + config.wiggle * pointNoise,
+          vec[0] * config.scale + config.aurora.wiggleAmplitude * pointNoise,
+          vec[1] * config.scale + config.aurora.wiggleAmplitude * pointNoise,
           10 * config.scale,
-          25 * config.scale * config.distanceHeightFactor * distance
+          25 * config.scale * config.aurora.distanceHeightFactor * distance,
         );
       }
     },
-    [canvasCtx, config, images]
+    [canvasCtx, config, images],
   );
 
   const drawStars = useCallback(
@@ -202,10 +212,12 @@ const AnimatedBackground: FunctionComponent = () => {
 
       for (let i = 0; i < starConfig.length; i++) {
         const star = starConfig[i];
-        const flickerMod = Math.floor(frameCount / star.flickerRate) % 100;
+        const flickerMod = star.flickerRate
+          ? Math.floor(frameCount / star.flickerRate) % 100
+          : 0;
         const opacity =
           flickerMod < 10
-            ? star.opacity / config.starFlickerDepth
+            ? star.opacity / config.star.flickerDepth
             : star.opacity;
         const color = `rgb(255, 255, 255, ${opacity})`;
         canvasCtx.beginPath();
@@ -215,13 +227,13 @@ const AnimatedBackground: FunctionComponent = () => {
           star.size,
           0,
           2 * Math.PI,
-          false
+          false,
         );
         canvasCtx.fillStyle = color;
         canvasCtx.fill();
       }
     },
-    [config.scale, config.starFlickerDepth, starConfig, canvasCtx]
+    [config.scale, config.star.flickerDepth, starConfig, canvasCtx],
   );
 
   const draw = useCallback(
@@ -234,7 +246,7 @@ const AnimatedBackground: FunctionComponent = () => {
       }
       canvasCtx.globalAlpha = 1;
     },
-    [applyDecay, canvasCtx, drawPath, config]
+    [applyDecay, canvasCtx, drawStars, paths, drawPath, config],
   );
 
   useEffect(() => {
