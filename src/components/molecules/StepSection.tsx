@@ -1,5 +1,5 @@
 import { FunctionComponent, PropsWithChildren, ReactNode } from "react";
-import styled from "styled-components";
+import { styled } from "styled-components";
 
 type StepSectionProps = PropsWithChildren<{
   title?: ReactNode;

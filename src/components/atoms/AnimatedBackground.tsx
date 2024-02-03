@@ -7,7 +7,7 @@ import {
   useState,
 } from "react";
 import { NoiseFunction2D, createNoise2D } from "simplex-noise";
-import styled from "styled-components";
+import { styled } from "styled-components";
 
 import * as Vec from "@/utils/vector2";
 

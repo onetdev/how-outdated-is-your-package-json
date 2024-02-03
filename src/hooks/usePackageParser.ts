@@ -27,7 +27,7 @@ const usePackageParser = ({
       setSkipped(
         Object.keys({ ...depsRaw, ...devDepsRaw }).length -
           deps.length -
-          devDeps.length
+          devDeps.length,
       );
     } catch (error) {
       setDependencies([]);

@@ -4,7 +4,7 @@ import { DependencyEntry } from "@/types";
 
 const sanitizeDependencyArray = (
   items: Record<string, string>,
-  isDev = false
+  isDev = false,
 ): DependencyEntry[] =>
   Object.entries(items)
     .filter(([, target]) => valid(coerce(target)))

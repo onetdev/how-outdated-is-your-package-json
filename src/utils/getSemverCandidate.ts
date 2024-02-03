@@ -5,7 +5,7 @@ import { LookupVersionCandidate } from "@/types";
 
 const getSemverCandidate = (
   targetVersion: string,
-  history: Record<string, string>
+  history: Record<string, string>,
 ): LookupVersionCandidate | null => {
   const matchVersion = maxSatisfying(Object.keys(history), targetVersion);
   if (!history[matchVersion]) {

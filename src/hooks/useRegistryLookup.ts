@@ -5,7 +5,7 @@ import getSemverCandidate from "@/utils/getSemverCandidate";
 
 const transformLookupResult = (
   dep: DependencyEntry,
-  history: Record<string, string>
+  history: Record<string, string>,
 ): PackageLookupResult => {
   const target = getSemverCandidate(dep.targetVersion, history);
   const latest = getSemverCandidate("*", history);
@@ -52,7 +52,7 @@ const useRegistryLookup = ({
               total: prev.total,
               fulfilled: prev.fulfilled + 1,
             }));
-          })
+          }),
       );
     }
 

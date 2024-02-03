@@ -30,8 +30,8 @@ const MainLayout: FunctionComponent<MainLayoutProps> = ({
           src="/riltech.svg"
           alt="Riltech"
           title="Riltech"
-          height="16px"
-          width="16px"
+          height="16"
+          width="16"
         />
       ),
     },

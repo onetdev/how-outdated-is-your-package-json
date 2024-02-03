@@ -4,7 +4,7 @@ import {
   MouseEventHandler,
   useRef,
 } from "react";
-import styled from "styled-components";
+import { styled } from "styled-components";
 
 import dummy from "@/assets/dummy-package.json";
 import Button from "@/components/atoms/Button";
@@ -24,7 +24,7 @@ const StepPackage: FunctionComponent<StepPackageProps> = ({
   const $input = useRef<HTMLTextAreaElement>(null);
 
   const handleInputChange: ChangeEventHandler<HTMLTextAreaElement> = (
-    event
+    event,
   ) => {
     onChange(event.target.value);
   };
