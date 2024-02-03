@@ -26,6 +26,10 @@ type RenderStats = {
   frameCount: number;
 };
 
+const avg = (items: number[]) =>
+  items.reduce((a, b) => a + b, 0) / items.length;
+const rand = (min: number, max: number) => Math.random() * (max - min) + min;
+
 const AnimatedBackground: FunctionComponent = () => {
   const isDev = process.env.NODE_ENV === "development";
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -45,8 +49,26 @@ const AnimatedBackground: FunctionComponent = () => {
       speed: 0.001,
       opacityNoiseFactor: 0.05,
       wiggle: 20,
+      starCount: 200,
+      starFlickerDepth: 2,
     }),
     [canvasRef.current?.width]
+  );
+
+  const starConfig: {
+    flickerRate: number;
+    opacity: number;
+    size: number;
+    vec: Vec.Vector2;
+  }[] = useMemo(
+    () =>
+      Array.from({ length: config.starCount }, () => ({
+        flickerRate: rand(0, 10),
+        opacity: rand(0, 1),
+        size: rand(1, 2),
+        vec: [rand(0, 100), rand(0, 100)],
+      })),
+    [config.starCount]
   );
 
   const images = useMemo(() => {
@@ -135,10 +157,6 @@ const AnimatedBackground: FunctionComponent = () => {
     [pathsBase, config.lerpSteps]
   );
 
-  const avg = (items: number[]) =>
-    items.reduce((a, b) => a + b, 0) / items.length;
-  const rand = (min: number, max: number) => Math.random() * (max - min) + min;
-
   const applyDecay = useCallback(() => {
     if (!canvasRef.current || !canvasCtx) return;
 
@@ -178,10 +196,39 @@ const AnimatedBackground: FunctionComponent = () => {
     [canvasCtx, config, images]
   );
 
+  const drawStars = useCallback(
+    (frameCount: number) => {
+      if (!canvasRef.current || !canvasCtx) return;
+
+      for (let i = 0; i < starConfig.length; i++) {
+        const star = starConfig[i];
+        const flickerMod = Math.floor(frameCount / star.flickerRate) % 100;
+        const opacity =
+          flickerMod < 10
+            ? star.opacity / config.starFlickerDepth
+            : star.opacity;
+        const color = `rgb(255, 255, 255, ${opacity})`;
+        canvasCtx.beginPath();
+        canvasCtx.arc(
+          star.vec[0] * config.scale,
+          star.vec[1] * config.scale,
+          star.size,
+          0,
+          2 * Math.PI,
+          false
+        );
+        canvasCtx.fillStyle = color;
+        canvasCtx.fill();
+      }
+    },
+    [config.scale, config.starFlickerDepth, starConfig, canvasCtx]
+  );
+
   const draw = useCallback(
     (clock: RenderStats) => {
       applyDecay();
 
+      drawStars(clock.frameCount);
       for (let i = 0; i < paths.length; i++) {
         drawPath(paths[i], clock.frameCount);
       }

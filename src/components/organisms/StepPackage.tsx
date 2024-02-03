@@ -42,7 +42,7 @@ const StepPackage: FunctionComponent<StepPackageProps> = ({
       className={className}
       title={
         <>
-          1. Providing <code>package.json</code>
+          1. Provide <code>package.json</code>
         </>
       }
     >
