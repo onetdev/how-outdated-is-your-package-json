@@ -10,8 +10,8 @@ import usePackageStats from "@/hooks/usePackageStats";
 import styles from "@/styles/Home.module.css";
 import { PackageLookupResult } from "@/types";
 import AnimatedBackground from "@/components/atoms/AnimatedBackground";
+import config from "@/config";
 
-const REGISTRY_URL = "https://registry.npmjs.org";
 const Home: FunctionComponent = () => {
   const [inputRaw, setInputRaw] = useState<string | null>(null);
   const [lookupData, setLookupData] = useState<PackageLookupResult[] | null>();
@@ -54,7 +54,7 @@ const Home: FunctionComponent = () => {
             className={styles["stepSection--step2"]}
             onResults={setLookupData}
             packageMeta={parsedPackage}
-            registryUrl={REGISTRY_URL}
+            registryUrl={config.registryUrl}
           />
           <StepResults
             className={styles["stepSection--step3"]}

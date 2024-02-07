@@ -42,7 +42,10 @@ const AnimatedBackground: FunctionComponent = () => {
 
   const config = useMemo(
     () => ({
-      scale: (canvasRef.current?.width || 100) / 100,
+      height: canvasRef.current?.height || 1,
+      width: canvasRef.current?.width || 1,
+      scale: (canvasRef.current?.width || 1) / 100,
+      resolution: typeof window !== "undefined" ? window.devicePixelRatio : 1,
       frameDecay: 0.65, // [0,1]
       aurora: {
         distanceHeightFactor: 0.6, // [0-1]
@@ -70,9 +73,9 @@ const AnimatedBackground: FunctionComponent = () => {
         flickerRate: rand(0, 10) === 1 ? rand(1, 10) : 0,
         opacity: rand(0, 1),
         size: rand(0.5, 1.5),
-        vec: [rand(0, 100), rand(0, 100)],
+        vec: [rand(0, 100), rand(0, 100 * (config.height / config.width))],
       })),
-    [config.star.limit],
+    [config.star.limit, config.height],
   );
 
   const images = useMemo(() => {
@@ -164,16 +167,13 @@ const AnimatedBackground: FunctionComponent = () => {
   const applyDecay = useCallback(() => {
     if (!canvasRef.current || !canvasCtx) return;
 
-    const width = canvasRef.current.width;
-    const height = canvasRef.current.height;
-
     if (config.frameDecay > 0) {
       canvasCtx.globalCompositeOperation = "destination-in";
       canvasCtx.fillStyle = "rgba(0, 0, 0, " + (1 - config.frameDecay) + ")";
-      canvasCtx.fillRect(0, 0, width, height);
+      canvasCtx.fillRect(0, 0, config.width, config.height);
       canvasCtx.globalCompositeOperation = "source-over";
     }
-  }, [config.frameDecay, canvasCtx]);
+  }, [config.frameDecay, config.width, config.height, canvasCtx]);
 
   const drawPath = useCallback(
     (path: InterpolatedPathDescriptor, offset: number) => {
@@ -257,6 +257,7 @@ const AnimatedBackground: FunctionComponent = () => {
       canvasCtx.canvas.width = window.innerWidth;
       canvasCtx.canvas.height = window.innerHeight;
     };
+    canvasCtx.scale(config.resolution, config.resolution);
     windowResize();
     window.addEventListener("resize", windowResize);
 
