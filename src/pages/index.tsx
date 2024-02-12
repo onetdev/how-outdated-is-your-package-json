@@ -26,7 +26,7 @@ const Home: FunctionComponent = () => {
           name="description"
           content="Probably the best way to tell if you app is using old af packages."
         />
-        <link rel="icon" href="/favicon.ico" />
+        <link rel="icon" href="/favicon.png" sizes="any" />
       </Head>
       <AnimatedBackground />
       <div className={styles.container}>
