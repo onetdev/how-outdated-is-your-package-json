@@ -10,6 +10,7 @@ import { NoiseFunction2D, createNoise2D } from "simplex-noise";
 import { styled } from "styled-components";
 
 import * as Vec from "@/utils/vector2";
+import useColorScheme from "@/hooks/useColorScheme";
 
 type PathDescriptor = {
   points: Vec.Vector2[];
@@ -32,6 +33,7 @@ const rand = (min: number, max: number) => Math.random() * (max - min) + min;
 
 const AnimatedBackground: FunctionComponent = () => {
   const isDev = process.env.NODE_ENV === "development";
+  const colorScheme = useColorScheme();
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [frameDeltaHistory, setFrameDeltaHistory] = useState<number[]>([]);
   const canvasCtx = useMemo(
@@ -82,12 +84,12 @@ const AnimatedBackground: FunctionComponent = () => {
     if (typeof window === "undefined") return null;
 
     // render automatically pulles new items.
-    return ["./aurora-drop-a.png"].map((x) => {
+    return [`./aurora-drop-${colorScheme}-a.png`].map((x) => {
       const img = new Image();
       img.src = x;
       return img;
     });
-  }, []);
+  }, [colorScheme]);
 
   // every even vector is a control point, will be transformed into quadratic
   // bezier curve

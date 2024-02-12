@@ -7,6 +7,7 @@
 .footer {
   display: flex;
   flex: 1;
+  margin-top: 2rem;
   padding: 2rem 0;
   border-top: 1px solid var(--background);
   justify-content: center;
@@ -18,4 +19,10 @@
   justify-content: center;
   align-items: center;
   padding: 0 1rem;
+}
+
+@media (prefers-color-scheme: light) {
+  .wrapper {
+    background: linear-gradient(180deg, #44a2f4 0%, #d5e1f4 100%);
+  }
 }

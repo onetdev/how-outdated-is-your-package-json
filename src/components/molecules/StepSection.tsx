@@ -1,5 +1,6 @@
 import { FunctionComponent, PropsWithChildren, ReactNode } from "react";
-import { styled } from "styled-components";
+
+import styles from "./StepSection.module.css";
 
 type StepSectionProps = PropsWithChildren<{
   title?: ReactNode;
@@ -12,34 +13,15 @@ const StepSection: FunctionComponent<StepSectionProps> = ({
   className,
   titleAction,
 }) => (
-  <Container className={className}>
+  <div className={`${styles.container} ${className}`}>
     {title && (
-      <TitleWrap>
-        <Title>{title}</Title>
+      <div className={styles["title-wrap"]}>
+        <h2 className={styles.title}>{title}</h2>
         {titleAction}
-      </TitleWrap>
+      </div>
     )}
     {children}
-  </Container>
+  </div>
 );
-
-const Container = styled.section`
-  backdrop-filter: blur(5px);
-  background: rgba(var(--surface), 0.5);
-  margin: var(--space-3xs);
-  padding: var(--space-s-m);
-  text-align: left;
-  border-radius: var(--space-3xs);
-`;
-const TitleWrap = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin: 0 0 1rem 0;
-`;
-const Title = styled.h2`
-  font-size: 1.5rem;
-  margin: 0;
-`;
 
 export default StepSection;
