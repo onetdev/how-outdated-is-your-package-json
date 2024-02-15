@@ -1,12 +1,14 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
 
-import { PackageLookupResult, PackageStat, PackageStatData } from "@/types";
+import { PackageLookupResult, PackageStat, PackageStatData } from '@/types';
 
-type PackageStatsProps = {
+export type DependencyStatsProps = {
   source: PackageLookupResult[] | null;
 };
 
-const usePackageStats = ({ source }: PackageStatsProps) => {
+const useDependencyStats = ({
+  source,
+}: DependencyStatsProps): PackageStat | null => {
   const [stats, setStats] = useState<PackageStat | null>();
 
   useEffect(() => {
@@ -54,4 +56,4 @@ const usePackageStats = ({ source }: PackageStatsProps) => {
   return stats;
 };
 
-export default usePackageStats;
+export default useDependencyStats;

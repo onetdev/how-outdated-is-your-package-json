@@ -5,7 +5,7 @@ export type LoggerOptions = {
 };
 const useLogger = ({ scope }: LoggerOptions = {}) => {
   const formatMessage = (message: string) =>
-    `[${scope ?? "GENERIC"}] ${message}`;
+    `[${scope ?? 'GENERIC'}] ${message}`;
 
   return {
     log: (message: string, ...rest: LoggerRest) =>

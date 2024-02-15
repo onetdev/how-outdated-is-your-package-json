@@ -1,4 +1,4 @@
-import { DependencyList, useEffect } from "react";
+import { DependencyList, useEffect } from 'react';
 
 const useEffectDebounced = (
   callback: () => void,

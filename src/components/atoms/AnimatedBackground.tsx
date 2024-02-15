@@ -5,12 +5,13 @@ import {
   useMemo,
   useRef,
   useState,
-} from "react";
-import { NoiseFunction2D, createNoise2D } from "simplex-noise";
-import { styled } from "styled-components";
+} from 'react';
+import { NoiseFunction2D, createNoise2D } from 'simplex-noise';
+import { styled } from 'styled-components';
 
-import * as Vec from "@/utils/vector2";
-import useColorScheme from "@/hooks/useColorScheme";
+import appConfig from '@/config';
+import * as Vec from '@/utils/vector2';
+import useColorScheme from '@/hooks/useColorScheme';
 
 type PathDescriptor = {
   points: Vec.Vector2[];
@@ -32,12 +33,11 @@ const avg = (items: number[]) =>
 const rand = (min: number, max: number) => Math.random() * (max - min) + min;
 
 const AnimatedBackground: FunctionComponent = () => {
-  const isDev = process.env.NODE_ENV === "development";
   const colorScheme = useColorScheme();
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [frameDeltaHistory, setFrameDeltaHistory] = useState<number[]>([]);
   const canvasCtx = useMemo(
-    () => canvasRef.current?.getContext("2d"),
+    () => canvasRef.current?.getContext('2d'),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [canvasRef.current],
   );
@@ -47,7 +47,7 @@ const AnimatedBackground: FunctionComponent = () => {
       height: canvasRef.current?.height || 1,
       width: canvasRef.current?.width || 1,
       scale: (canvasRef.current?.width || 1) / 100,
-      resolution: typeof window !== "undefined" ? window.devicePixelRatio : 1,
+      resolution: typeof window !== 'undefined' ? window.devicePixelRatio : 1,
       frameDecay: 0.65, // [0,1]
       aurora: {
         distanceHeightFactor: 0.6, // [0-1]
@@ -61,7 +61,7 @@ const AnimatedBackground: FunctionComponent = () => {
         limit: 1000,
       },
     }),
-    [canvasRef.current?.width],
+    [],
   );
 
   const starConfig: {
@@ -77,11 +77,11 @@ const AnimatedBackground: FunctionComponent = () => {
         size: rand(0.5, 1.5),
         vec: [rand(0, 100), rand(0, 100 * (config.height / config.width))],
       })),
-    [config.star.limit, config.height],
+    [config.star.limit, config.height, config.width],
   );
 
   const images = useMemo(() => {
-    if (typeof window === "undefined") return null;
+    if (typeof window === 'undefined') return null;
 
     // render automatically pulles new items.
     return [`./aurora-drop-${colorScheme}-a.png`].map((x) => {
@@ -137,7 +137,7 @@ const AnimatedBackground: FunctionComponent = () => {
     () =>
       pathsBase.map((x) => {
         if (x.points.length % 2 === 0) {
-          throw new Error("Segments must be odd!");
+          throw new Error('Segments must be odd!');
         }
 
         const segments = [];
@@ -170,10 +170,10 @@ const AnimatedBackground: FunctionComponent = () => {
     if (!canvasRef.current || !canvasCtx) return;
 
     if (config.frameDecay > 0) {
-      canvasCtx.globalCompositeOperation = "destination-in";
-      canvasCtx.fillStyle = "rgba(0, 0, 0, " + (1 - config.frameDecay) + ")";
+      canvasCtx.globalCompositeOperation = 'destination-in';
+      canvasCtx.fillStyle = 'rgba(0, 0, 0, ' + (1 - config.frameDecay) + ')';
       canvasCtx.fillRect(0, 0, config.width, config.height);
-      canvasCtx.globalCompositeOperation = "source-over";
+      canvasCtx.globalCompositeOperation = 'source-over';
     }
   }, [config.frameDecay, config.width, config.height, canvasCtx]);
 
@@ -261,7 +261,7 @@ const AnimatedBackground: FunctionComponent = () => {
     };
     canvasCtx.scale(config.resolution, config.resolution);
     windowResize();
-    window.addEventListener("resize", windowResize);
+    window.addEventListener('resize', windowResize);
 
     const startTime = new Date().getTime();
     let lastDrawTime = 0;
@@ -282,14 +282,14 @@ const AnimatedBackground: FunctionComponent = () => {
     renderNext();
 
     return () => {
-      removeEventListener("resize", windowResize);
+      removeEventListener('resize', windowResize);
       cancelAnimationFrame(lastFrameResourceId);
     };
-  }, [canvasRef, canvasCtx, draw]);
+  }, [canvasRef, canvasCtx, draw, config.resolution]);
 
   return (
     <Container>
-      {isDev && frameDeltaHistory.length > 0 && (
+      {appConfig.isDev && frameDeltaHistory.length > 0 && (
         <FpsCounter>{Math.round(1000 / avg(frameDeltaHistory))}</FpsCounter>
       )}
       <Canvas ref={canvasRef} />
