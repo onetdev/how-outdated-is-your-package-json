@@ -1,11 +1,11 @@
-import { clsx } from "clsx";
-import Image from "next/image";
-import { ComponentProps, FunctionComponent, PropsWithChildren } from "react";
+import { clsx } from 'clsx';
+import Image from 'next/image';
+import { ComponentProps, FunctionComponent, PropsWithChildren } from 'react';
 
-import styles from "@/components/templates/MainLayout.module.css";
+import styles from '@/components/templates/MainLayout.module.css';
 
 type MainLayoutProps = PropsWithChildren<{
-  className?: ComponentProps<"div">["className"];
+  className?: ComponentProps<'div'>['className'];
 }>;
 const MainLayout: FunctionComponent<MainLayoutProps> = ({
   children,
@@ -14,17 +14,17 @@ const MainLayout: FunctionComponent<MainLayoutProps> = ({
   const style = clsx([styles.container, className]);
 
   const links = [
-    { href: "https://onet.dev", children: "Konrad Koller" },
+    { href: 'https://onet.dev', children: 'Konrad Koller' },
     {
-      href: "https://buymeacoffee.com/onetdev",
-      children: "Sponsor my addiction",
+      href: 'https://buymeacoffee.com/onetdev',
+      children: 'Sponsor my addiction',
     },
     {
-      href: "https://github.com/onetdev/how-outdated-is-your-package-json",
-      children: "GitHub source",
+      href: 'https://github.com/onetdev/how-outdated-is-your-package-json',
+      children: 'GitHub source',
     },
     {
-      href: "https://riltech.co",
+      href: 'https://riltech.co',
       children: (
         <Image
           src="/riltech.svg"

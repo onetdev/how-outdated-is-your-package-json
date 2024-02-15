@@ -1,4 +1,4 @@
-import { Dayjs } from "dayjs";
+import { Dayjs } from 'dayjs';
 
 export type AgeInSeconds = number;
 export type DependencyEntry = {
@@ -30,9 +30,9 @@ export type PackageStatData = {
   upgradeAgeDiff: AgeInSeconds;
 };
 export type PackageDataMathFields =
-  | "maxSatisfiedAge"
-  | "latestAge"
-  | "upgradeAgeDiff";
+  | 'maxSatisfiedAge'
+  | 'latestAge'
+  | 'upgradeAgeDiff';
 export type PackageStat = {
   counters: { total: number; dev: number; nonDev: number };
   data: PackageStatData[];

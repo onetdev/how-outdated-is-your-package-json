@@ -1,7 +1,7 @@
-import dayjs from "dayjs";
-import { maxSatisfying } from "semver";
+import dayjs from 'dayjs';
+import { maxSatisfying } from 'semver';
 
-import { LookupVersionCandidate } from "@/types";
+import { LookupVersionCandidate } from '@/types';
 
 const getSemverCandidate = (
   targetVersion: string,
@@ -15,7 +15,7 @@ const getSemverCandidate = (
   return {
     version: matchVersion,
     date,
-    age: dayjs().diff(date, "seconds"),
+    age: dayjs().diff(date, 'seconds'),
   };
 };
 
