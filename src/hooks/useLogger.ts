@@ -19,6 +19,8 @@ const useLogger = ({ scope }: LoggerOptions = {}) => {
         console.error(formatMessage(message), ...rest),
       info: (message: string, ...rest: LoggerRest) =>
         console.info(formatMessage(message), ...rest),
+      warn: (message: string, ...rest: LoggerRest) =>
+        console.warn(formatMessage(message), ...rest),
     }),
     [formatMessage],
   );
