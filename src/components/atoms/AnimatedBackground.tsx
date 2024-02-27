@@ -37,20 +37,19 @@ const rand = (min: number, max: number) => Math.random() * (max - min) + min;
 const AnimatedBackground: FunctionComponent = () => {
   const logger = useLogger({ scope: 'AnimatedBackground' });
   const colorScheme = useColorScheme();
-  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const $canvasRef = useRef<HTMLCanvasElement>(null);
+  const [dimensions, setDimensions] = useState({ width: 1, height: 1 });
   const [frameDeltaHistory, setFrameDeltaHistory] = useState<number[]>([]);
-  const canvasCtx = useMemo(
-    () => canvasRef.current?.getContext('2d'),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [canvasRef.current],
+  const $canvasCtx = useMemo(
+    () => $canvasRef.current?.getContext('2d'),
+    [$canvasRef.current],
   );
 
   const config = useMemo(
     () => ({
-      height: canvasRef.current?.height || 1,
-      width: canvasRef.current?.width || 1,
-      scale: (canvasRef.current?.width || 1) / 100,
-      resolution: typeof window !== 'undefined' ? window.devicePixelRatio : 1,
+      height: dimensions.height,
+      width: dimensions.width,
+      scale: dimensions.width / 100,
       frameDecay: 0.65, // [0,1]
       aurora: {
         distanceHeightFactor: 0.6, // [0-1]
@@ -64,7 +63,7 @@ const AnimatedBackground: FunctionComponent = () => {
         limit: 1000,
       },
     }),
-    [],
+    [dimensions.height, dimensions.width],
   );
 
   const starConfig: {
@@ -170,19 +169,19 @@ const AnimatedBackground: FunctionComponent = () => {
   );
 
   const applyDecay = useCallback(() => {
-    if (!canvasRef.current || !canvasCtx) return;
+    if (!$canvasCtx) return;
 
     if (config.frameDecay > 0) {
-      canvasCtx.globalCompositeOperation = 'destination-in';
-      canvasCtx.fillStyle = 'rgba(0, 0, 0, ' + (1 - config.frameDecay) + ')';
-      canvasCtx.fillRect(0, 0, config.width, config.height);
-      canvasCtx.globalCompositeOperation = 'source-over';
+      $canvasCtx.globalCompositeOperation = 'destination-in';
+      $canvasCtx.fillStyle = 'rgba(0, 0, 0, ' + (1 - config.frameDecay) + ')';
+      $canvasCtx.fillRect(0, 0, config.width, config.height);
+      $canvasCtx.globalCompositeOperation = 'source-over';
     }
-  }, [config.frameDecay, config.width, config.height, canvasCtx]);
+  }, [$canvasCtx, config.frameDecay, config.height, config.width]);
 
   const drawPath = useCallback(
     (path: InterpolatedPathDescriptor, offset: number) => {
-      if (!canvasRef.current || !canvasCtx) return;
+      if (!$canvasCtx) return;
 
       const pointCount = path.lerps.length;
       for (let i = 0; i < pointCount; i++) {
@@ -197,9 +196,9 @@ const AnimatedBackground: FunctionComponent = () => {
           (1 + pointNoise) *
           (config.aurora.opacityNoiseFactor / 100) *
           distance;
-        canvasCtx.globalAlpha = opacity;
+        $canvasCtx.globalAlpha = opacity;
 
-        canvasCtx.drawImage(
+        $canvasCtx.drawImage(
           images[i % images.length],
           vec[0] * config.scale + config.aurora.wiggleAmplitude * pointNoise,
           vec[1] * config.scale + config.aurora.wiggleAmplitude * pointNoise,
@@ -208,12 +207,15 @@ const AnimatedBackground: FunctionComponent = () => {
         );
       }
     },
-    [canvasCtx, config, images],
+    [$canvasCtx, config, images],
   );
 
   const drawStars = useCallback(
     (frameCount: number) => {
-      if (!canvasRef.current || !canvasCtx) return;
+      if (!$canvasCtx) {
+        logger.warn('Missing context, aborting drawStars');
+        return;
+      }
 
       for (let i = 0; i < starConfig.length; i++) {
         const star = starConfig[i];
@@ -225,8 +227,8 @@ const AnimatedBackground: FunctionComponent = () => {
             ? star.opacity / config.star.flickerDepth
             : star.opacity;
         const color = `rgb(255, 255, 255, ${opacity})`;
-        canvasCtx.beginPath();
-        canvasCtx.arc(
+        $canvasCtx.beginPath();
+        $canvasCtx.arc(
           star.vec[0] * config.scale,
           star.vec[1] * config.scale,
           star.size,
@@ -234,11 +236,11 @@ const AnimatedBackground: FunctionComponent = () => {
           2 * Math.PI,
           false,
         );
-        canvasCtx.fillStyle = color;
-        canvasCtx.fill();
+        $canvasCtx.fillStyle = color;
+        $canvasCtx.fill();
       }
     },
-    [config.scale, config.star.flickerDepth, starConfig, canvasCtx],
+    [$canvasCtx, logger, starConfig, config.star.flickerDepth, config.scale],
   );
 
   const draw = useCallback(
@@ -249,29 +251,47 @@ const AnimatedBackground: FunctionComponent = () => {
       for (let i = 0; i < paths.length; i++) {
         drawPath(paths[i], clock.frameCount);
       }
-      canvasCtx.globalAlpha = 1;
+      $canvasCtx.globalAlpha = 1;
     },
-    [applyDecay, canvasCtx, drawStars, paths, drawPath],
+    [applyDecay, $canvasCtx, drawStars, paths, drawPath],
   );
 
+  // Keep canvas in sync with window size
   useEffect(() => {
-    if (!canvasRef.current || !canvasCtx) return;
-
-    logger.log(`Rendering canvas...`);
     const windowResize = () => {
-      canvasCtx.canvas.width = window.innerWidth;
-      canvasCtx.canvas.height = window.innerHeight;
+      if ($canvasCtx) {
+        $canvasCtx.canvas.width = window.innerWidth;
+        $canvasCtx.canvas.height = window.innerHeight;
+        // const resolution =
+        //   typeof window !== 'undefined' ? window.devicePixelRatio : 1;
+        $canvasCtx.scale(1, 1);
+      }
+      setDimensions({
+        width: window.innerWidth,
+        height: window.innerHeight,
+      });
     };
-    canvasCtx.scale(config.resolution, config.resolution);
+
     windowResize();
     window.addEventListener('resize', windowResize);
 
+    return () => removeEventListener('resize', windowResize);
+  }, [$canvasCtx, logger]);
+
+  // The actual reder loop and keeping track of render stats
+  useEffect(() => {
+    if (!$canvasCtx) {
+      logger.warn('Missing draw context, frame render pending...');
+      return;
+    }
+
+    logger.info(`Rendering canvas...`);
     const startTime = new Date().getTime();
     let lastDrawTime = 0;
     let lastFrameResourceId: number;
     let frameCount = 0;
 
-    const renderNext = () => {
+    const renderFrame = () => {
       const now = new Date().getTime();
       const delta = lastDrawTime ? now - lastDrawTime : 0;
       setFrameDeltaHistory((prev) => prev.slice(-100).concat(delta));
@@ -279,16 +299,12 @@ const AnimatedBackground: FunctionComponent = () => {
 
       lastDrawTime = now;
       frameCount++;
-      lastFrameResourceId = requestAnimationFrame(renderNext);
+      lastFrameResourceId = requestAnimationFrame(renderFrame);
     };
 
-    renderNext();
-
-    return () => {
-      removeEventListener('resize', windowResize);
-      cancelAnimationFrame(lastFrameResourceId);
-    };
-  }, [canvasRef, canvasCtx, draw, config.resolution]);
+    renderFrame();
+    return () => cancelAnimationFrame(lastFrameResourceId);
+  }, [$canvasCtx, draw, logger]);
 
   return (
     <div className={styles.container}>
@@ -297,7 +313,7 @@ const AnimatedBackground: FunctionComponent = () => {
           {Math.round(1000 / avg(frameDeltaHistory))}
         </span>
       )}
-      <canvas className={styles.canvas} ref={canvasRef} />
+      <canvas className={styles.canvas} ref={$canvasRef} />
     </div>
   );
 };
