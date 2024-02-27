@@ -11,8 +11,6 @@ const MainLayout: FunctionComponent<MainLayoutProps> = ({
   children,
   className,
 }) => {
-  const style = clsx([styles.container, className]);
-
   const links = [
     { href: 'https://onet.dev', children: 'Konrad Koller' },
     {
@@ -39,7 +37,7 @@ const MainLayout: FunctionComponent<MainLayoutProps> = ({
 
   return (
     <div className={styles.wrapper}>
-      <main className={style}>{children}</main>
+      <main className={className}>{children}</main>
       <footer className={styles.footer}>
         {links.map(({ href, children: linkChildren }) => (
           <a key={href} href={href} target="_blank" rel="noopener noreferrer">

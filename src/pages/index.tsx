@@ -6,6 +6,7 @@ import StepResults from '@/components/organisms/StepAnalyze';
 import MainLayout from '@/components/templates/MainLayout';
 import { PackageIngestResult } from '@/hooks/usePackageIngest';
 import styles from '@/styles/Home.module.css';
+import globalStyles from '@/styles/Global.module.css';
 import AnimatedBackground from '@/components/atoms/AnimatedBackground';
 import config from '@/config';
 
@@ -28,7 +29,7 @@ const Home: FunctionComponent = () => {
         <div className={styles.header}>
           <h1 className={styles.title}>
             How outdated is your{' '}
-            <code className={styles.code}>package.json?</code>
+            <code className={globalStyles.code}>package.json?</code>
           </h1>
 
           <div className={styles.intro}>

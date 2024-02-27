@@ -15,7 +15,7 @@ import Button from '@/components/atoms/Button';
 import Text from '@/components/atoms/Text';
 import TextArea from '@/components/atoms/TextArea';
 import StepSection from '@/components/molecules/StepSection';
-import styles from '@/styles/Home.module.css';
+import globalStyles from '@/styles/Global.module.css';
 import usePackageIngest, {
   PackageIngestResult,
 } from '@/hooks/usePackageIngest';
@@ -103,14 +103,15 @@ const StepPackageIngest: FunctionComponent<StepPackageIngestProps> = ({
       )}
       <p>
         <Text size="small">
-          The website extracts <code className={styles.code}>dependencies</code>{' '}
-          and <code className={styles.code}>devDependencies</code> from any
+          The website extracts{' '}
+          <code className={globalStyles.code}>dependencies</code> and{' '}
+          <code className={globalStyles.code}>devDependencies</code> from any
           valid json object while removing semver incompatible version locks
           (thus removing https/ssh/path packages).{' '}
           <strong>
             Don&#8217;t worry, we don&#8217;t store your{' '}
-            <code className={styles.code}>package.json</code> and only query
-            package manifests from the remote registry.
+            <code className={globalStyles.code}>package.json</code> and only
+            query package manifests from the remote registry.
           </strong>
         </Text>
       </p>
