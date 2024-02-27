@@ -1,48 +1,42 @@
+.root {
+  width: 100%;
+}
 .container {
   z-index: 10;
   position: relative;
+  max-width: var(--max-width);
+  margin: 0 auto;
 }
-
 .header {
   display: flex;
   flex-flow: column;
   min-height: 65vh;
   justify-content: center;
-  padding: 0 var(--space-2xl-3xl);
-    max-width: 800px;
-    margin: 0 auto;
+  padding: 0 var(--space-s-m);
 }
-
 .title {
-  margin: var(--space-2xl-3xl) auto;
+  margin: var(--space-2xl-3xl) 0;
   font-size: var(--step-3);
   line-height: 1.15;
 }
-
 .intro {
   margin: 0 auto var(--space-2xl-3xl) auto;
   line-height: 1.5;
   font-size: var(--step--1);
 }
-
 .stepContainer {
   display: flex;
-    flex-direction: column;
+  flex-direction: column;
 }
-
 .stepSection--step1 {
   grid-area: a;
 }
-
 .stepSection--step2 {
   grid-area: b;
 }
-
 .statContainer {
   display: flex;
   align-items: center;
   justify-content: center;
   flex-wrap: wrap;
-  max-width: 800px;
 }
-

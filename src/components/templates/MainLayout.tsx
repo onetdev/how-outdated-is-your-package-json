@@ -1,4 +1,3 @@
-import { clsx } from 'clsx';
 import Image from 'next/image';
 import { ComponentProps, FunctionComponent, PropsWithChildren } from 'react';
 

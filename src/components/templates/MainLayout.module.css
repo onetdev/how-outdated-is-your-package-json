@@ -12,6 +12,7 @@
   border-top: 1px solid var(--background);
   justify-content: center;
   align-items: center;
+  max-width: var(--max-width);
 }
 
 .footer a {

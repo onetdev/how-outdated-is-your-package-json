@@ -16,6 +16,7 @@
   Bitstream Vera Sans Mono, Courier New, monospace;
   --font-default: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
     Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+  --max-width: 1600px;
 }
 
 @media (prefers-color-scheme: dark) {

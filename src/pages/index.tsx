@@ -15,7 +15,7 @@ const Home: FunctionComponent = () => {
     useState<PackageIngestResult | null>();
 
   return (
-    <MainLayout>
+    <MainLayout className={styles.root}>
       <Head>
         <title>How outdated is your package.json?</title>
         <meta
