@@ -75,6 +75,9 @@ const StepPackageIngest: FunctionComponent<StepPackageIngestProps> = ({
         </>
       }>
       <div className={styles.inputWrap}>
+        {getValue().length > 0 && !result.isValid && (
+          <div className={styles.invalidJson}>⚠️ Invalid JSON</div>
+        )}
         <TextArea
           forwardRef={$input}
           placeholder={`{"todo":"Put your package.json here"}`}

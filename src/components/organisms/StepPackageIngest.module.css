@@ -14,3 +14,9 @@
   gap: 1rem;
   padding: var(--space-2xs) 0;
 }
+.invalidJson {
+  background: var(--error);
+  color: var(--on-error);
+  font-size: var(--font-size-sm);
+  padding: var(--space-xs);
+}
