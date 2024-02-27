@@ -1,0 +1,16 @@
+.inputWrap {
+  width: 100%;
+  position: relative;
+}
+.dummyButtonWrap {
+  position: absolute;
+  right: 0.75rem;
+  bottom: 1rem;
+  white-space: nowrap;
+}
+.actionContainer {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: var(--space-2xs) 0;
+}

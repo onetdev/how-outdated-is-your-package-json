@@ -4,9 +4,6 @@ import { DependencyEntry } from '@/types';
 import sanitizeDependencyArray from '@/utils/sanitizeDependencyArray';
 import useLogger from '@/hooks/useLogger';
 
-export type PackageIngestProps = {
-  input: string | null;
-};
 export type PackageIngestResult =
   | {
       dependencies?: DependencyEntry[];
@@ -21,19 +18,17 @@ export type PackageIngestResult =
   | { isValid: false };
 export type PackageIngestReturn = {
   result: PackageIngestResult;
-  tryParse: () => void;
+  tryParse: (raw: string) => void;
 };
 
-const usePackageIngest = ({
-  input,
-}: PackageIngestProps): PackageIngestReturn => {
+const usePackageIngest = (): PackageIngestReturn => {
   const logger = useLogger({ scope: 'usePackageIngest' });
   const [state, setState] = useState<PackageIngestResult>({
     isValid: false,
   });
 
-  const parse = () => {
-    const parsed = JSON.parse(input || '{}');
+  const parse = (raw: string) => {
+    const parsed = JSON.parse(raw || '{}');
     const depsRaw = parsed.dependencies || {};
     const devDepsRaw = parsed.devDependencies || {};
     const deps = sanitizeDependencyArray(depsRaw);
@@ -55,9 +50,9 @@ const usePackageIngest = ({
     });
   };
 
-  const tryParse = () => {
+  const tryParse = (raw: string) => {
     try {
-      parse();
+      parse(raw);
     } catch (error) {
       setState({ isValid: false });
       logger.error('Hmm, something is fishy with this input.', error);

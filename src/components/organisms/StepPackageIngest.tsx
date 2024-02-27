@@ -7,7 +7,6 @@ import {
   useRef,
   useState,
 } from 'react';
-import { styled } from 'styled-components';
 import { WandIcon } from 'lucide-react';
 
 import dummy from '@/assets/dummy-package.json';
@@ -20,6 +19,9 @@ import usePackageIngest, {
   PackageIngestResult,
 } from '@/hooks/usePackageIngest';
 import useLogger from '@/hooks/useLogger';
+import LoadingIndacator from '@/components/atoms/LoadingIndicator';
+
+import styles from './StepPackageIngest.module.css';
 
 export type StepPackageIngestProps = {
   className?: string;
@@ -31,11 +33,10 @@ const StepPackageIngest: FunctionComponent<StepPackageIngestProps> = ({
 }) => {
   const logger = useLogger({ scope: 'StepPackageIngest' });
   const $input = useRef<HTMLTextAreaElement>(null);
-  const [value, setValue] = useState<string>('');
   const [autoMode, setAutoMode] = useState<boolean>(false);
-  const { result, tryParse } = usePackageIngest({ input: value });
+  const { result, tryParse } = usePackageIngest();
   const dummyPackage = useMemo(() => JSON.stringify(dummy, null, 2), []);
-  const hasDummyPopulated = dummyPackage === value;
+  const hasDummyPopulated = dummyPackage === $input.current?.value;
 
   useEffect(() => {
     if (!result.isValid) return;
@@ -47,11 +48,12 @@ const StepPackageIngest: FunctionComponent<StepPackageIngestProps> = ({
     onData(result);
   }, [logger, onData, result]);
 
-  const handleManualSubmit = () => tryParse();
+  const getValue = () => $input.current?.value || '';
+  const handleManualSubmit = () => tryParse(getValue());
   const handleChangeText: ChangeEventHandler<HTMLTextAreaElement> = (e) => {
-    setValue(e.target.value);
+    console.log('CHANGE TEXT', e.target.value);
     if (autoMode) {
-      tryParse();
+      tryParse(getValue());
     }
   };
   const handleDummyFill: MouseEventHandler<HTMLButtonElement> = () => {
@@ -59,7 +61,9 @@ const StepPackageIngest: FunctionComponent<StepPackageIngestProps> = ({
 
     logger.info('Filling with dummy data...');
     $input.current.value = dummyPackage;
-    setValue(dummyPackage);
+    if (autoMode) {
+      tryParse(dummyPackage);
+    }
   };
 
   return (
@@ -70,7 +74,7 @@ const StepPackageIngest: FunctionComponent<StepPackageIngestProps> = ({
           You paste your <code>package.json</code> here
         </>
       }>
-      <InputWrap>
+      <div className={styles.inputWrap}>
         <TextArea
           forwardRef={$input}
           placeholder={`{"todo":"Put your package.json here"}`}
@@ -78,29 +82,36 @@ const StepPackageIngest: FunctionComponent<StepPackageIngestProps> = ({
           onChange={handleChangeText}
         />
         {!hasDummyPopulated && (
-          <DummyButtonWrap>
+          <div className={styles.dummyButtonWrap}>
             <Button size="normal" variant="rainbow" onClick={handleDummyFill}>
               <WandIcon size={'1rem'} />
               &nbsp; Use demo <code>package.json</code>
             </Button>
-          </DummyButtonWrap>
+          </div>
         )}
-      </InputWrap>
-      <label>
-        <input
-          type="checkbox"
-          name="autoMode"
-          onChange={() => setAutoMode((prev) => !prev)}
-          value={autoMode ? '1' : '0'}
-          checked={autoMode}
-        />
-        Auto process
-      </label>
-      {!autoMode && (
-        <Button size="normal" variant="rainbow" onClick={handleManualSubmit}>
-          Analyze!
-        </Button>
-      )}
+      </div>
+      <div className={styles.actionContainer}>
+        {autoMode && (
+          <Button size="normal" variant="rainbow" disabled>
+            <LoadingIndacator />
+          </Button>
+        )}
+        {!autoMode && (
+          <Button size="normal" variant="rainbow" onClick={handleManualSubmit}>
+            Analyze!
+          </Button>
+        )}
+        <label>
+          <input
+            type="checkbox"
+            name="autoMode"
+            onChange={() => setAutoMode((prev) => !prev)}
+            value={autoMode ? '1' : '0'}
+            checked={autoMode}
+          />
+          Auto process
+        </label>
+      </div>
       <p>
         <Text size="small">
           The website extracts{' '}
@@ -118,16 +129,5 @@ const StepPackageIngest: FunctionComponent<StepPackageIngestProps> = ({
     </StepSection>
   );
 };
-
-const InputWrap = styled.div`
-  width: 100%;
-  position: relative;
-`;
-const DummyButtonWrap = styled.div`
-  position: absolute;
-  right: 0.75rem;
-  bottom: 1rem;
-  white-space: nowrap;
-`;
 
 export default StepPackageIngest;
