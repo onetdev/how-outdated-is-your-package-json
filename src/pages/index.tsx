@@ -4,14 +4,14 @@ import { FunctionComponent, useState } from 'react';
 import StepPackageIngest from '@/components/organisms/StepPackageIngest';
 import StepResults from '@/components/organisms/StepAnalyze';
 import MainLayout from '@/components/templates/MainLayout';
-import { PackageIngestMetadata } from '@/hooks/usePackageIngest';
+import { PackageIngestResult } from '@/hooks/usePackageIngest';
 import styles from '@/styles/Home.module.css';
 import AnimatedBackground from '@/components/atoms/AnimatedBackground';
 import config from '@/config';
 
 const Home: FunctionComponent = () => {
   const [ingestResult, setIngestResult] =
-    useState<PackageIngestMetadata | null>();
+    useState<PackageIngestResult | null>();
 
   return (
     <MainLayout>

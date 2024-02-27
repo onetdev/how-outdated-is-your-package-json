@@ -11,7 +11,7 @@ import StepSection from '@/components/molecules/StepSection';
 import styles from '@/components/organisms/StepResults.module.css';
 import { AgeInSeconds, PackageStatData } from '@/types';
 import dayjs from '@/utils/date';
-import { PackageIngestMetadata } from '@/hooks/usePackageIngest';
+import { PackageIngestResult } from '@/hooks/usePackageIngest';
 import useDependencyStats from '@/hooks/useDependencyStats';
 import useRegistryLookup from '@/hooks/useRegistryLookup';
 import useEffectDebounced from '@/hooks/useEffectDebounced';
@@ -20,7 +20,7 @@ import ProgressBar from '@/components/molecules/ProgressBar';
 
 export type StepResultsProps = {
   className?: string;
-  ingest: PackageIngestMetadata;
+  ingest: PackageIngestResult;
   registryUrl: string;
 };
 const StepResults: FunctionComponent<StepResultsProps> = ({
@@ -29,18 +29,15 @@ const StepResults: FunctionComponent<StepResultsProps> = ({
   registryUrl,
 }) => {
   const columnConfig = useMemo(() => getStatColumns(), []);
-  const lookup = useRegistryLookup({
-    dependencies: ingest?.dependencies,
-    registryUrl,
-  });
+  const lookup = useRegistryLookup({ registryUrl });
   const stats = useDependencyStats({ source: lookup.results });
   const data = stats?.data || [];
 
   useEffectDebounced(
     () => {
-      void lookup.lookup();
+      void lookup.lookup(ingest?.isValid ? ingest?.dependencies : []);
     },
-    1000,
+    200,
     [ingest, registryUrl],
   );
 
@@ -50,10 +47,10 @@ const StepResults: FunctionComponent<StepResultsProps> = ({
       titleAction={data.length ? <JsonDownloadButton data={data} /> : null}
       title="Check the results">
       {data?.length < 1 && <Text>Complete the previous step first.</Text>}
-      {lookup.progress.total > 0 && (
+      {lookup.progress?.total > 0 && (
         <ProgressBar
-          total={lookup.progress.total}
-          current={lookup.progress.fulfilled}
+          total={lookup.progress?.total}
+          current={lookup.progress?.fulfilled}
         />
       )}
       {data?.length > 0 && (

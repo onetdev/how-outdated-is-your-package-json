@@ -2,20 +2,33 @@ import { useCallback, useState } from 'react';
 
 import { DependencyEntry, PackageLookupResult } from '@/types';
 import getSemverCandidate from '@/utils/getSemverCandidate';
+import useLogger from '@/hooks/useLogger';
 
+export type RegistryLookupState = {
+  progress: {
+    total: number;
+    fulfilled: number;
+    failed: number;
+  };
+  results: PackageLookupResult[];
+};
+export type RegistryLookupResult = {
+  isFetching: boolean;
+  lookup: (dependencies: DependencyEntry[]) => void;
+  progress?: RegistryLookupState['progress'];
+  results?: PackageLookupResult[];
+};
 export type RegistryLookupProps = {
-  dependencies?: DependencyEntry[];
   registryUrl?: string;
 };
 
 const useRegistryLookup = ({
-  dependencies,
   registryUrl,
-}: RegistryLookupProps) => {
-  const [progress, setProgress] = useState({ total: 0, fulfilled: 0 });
-  const [results, setResults] = useState<PackageLookupResult[]>([]);
+}: RegistryLookupProps): RegistryLookupResult => {
+  const logger = useLogger({ scope: 'useRegistryLookup' });
+  const [state, setState] = useState<RegistryLookupState | null>(null);
 
-  const fetchRemote = useCallback(
+  const createFetchTask = useCallback(
     async (dependency: DependencyEntry) =>
       fetch(`${registryUrl}/${dependency.name}`, {
         cache: 'force-cache',
@@ -23,37 +36,51 @@ const useRegistryLookup = ({
       })
         .then((raw) => raw.json())
         .then((response) => transformLookupResult(dependency, response.time))
-        .catch(() => null)
-        .finally(() => {
-          setProgress((prev) => ({
-            total: prev.total,
-            fulfilled: prev.fulfilled + 1,
-          }));
-        }),
+        .catch(() => null),
     [registryUrl],
   );
 
+  const setupFetchQueue = useCallback(
+    (dependencies: DependencyEntry[]) => {
+      setState({
+        progress: {
+          total: dependencies.length,
+          fulfilled: 0,
+          failed: 0,
+        },
+        results: [],
+      });
+
+      const queue: Promise<PackageLookupResult | null>[] = [];
+      for (const dependency of dependencies) {
+        logger.log(`Queueing ${dependency.name}@${dependency.targetVersion}`);
+        const item = createFetchTask(dependency).then((data) => {
+          setState((prev) => ({
+            results: prev.results,
+            progress: {
+              ...prev.progress,
+              fulfilled: prev.progress.fulfilled + 1,
+            },
+          }));
+          return data;
+        });
+        queue.push(item);
+      }
+
+      return queue;
+    },
+    [createFetchTask, logger],
+  );
+
   const lookup = useCallback(
-    async ({ diff = true }: { diff?: boolean } = {}) => {
-      if (!dependencies || progress.total !== progress.fulfilled) {
+    async (dependencies: DependencyEntry[]) => {
+      if (!dependencies) {
+        setState(null);
         return;
       }
 
-      setResults((prev) =>
-        diff
-          ? prev.filter((result) =>
-              dependencies.some((dep) => dep.name === result.name),
-            )
-          : [],
-      );
-      setProgress({ total: dependencies.length, fulfilled: 0 });
-      const fetchQueue: Promise<PackageLookupResult | null>[] = [];
-      for (const dependency of dependencies) {
-        console.log(`Queueing ${dependency.name}@${dependency.targetVersion}`);
-        fetchQueue.push(fetchRemote(dependency));
-      }
-
-      const queueResults = (await Promise.allSettled(fetchQueue))
+      const queue = setupFetchQueue(dependencies);
+      const queueResults = (await Promise.allSettled(queue))
         .map((result) => {
           if (result.status !== 'fulfilled') {
             return null;
@@ -62,23 +89,20 @@ const useRegistryLookup = ({
         })
         .filter(Boolean);
 
-      setResults(queueResults);
-      setProgress({ total: 0, fulfilled: 0 });
+      setState((prev) => ({
+        results: queueResults,
+        progress: { ...prev.progress },
+      }));
     },
-    [dependencies, progress.fulfilled, progress.total, fetchRemote],
+    [setupFetchQueue],
   );
 
-  const clear = () => {
-    setResults([]);
-    setProgress({ total: 0, fulfilled: 0 });
-  };
-
   return {
-    progress,
-    isFetching: progress.total !== progress.fulfilled,
-    results,
+    ...state,
+    isFetching:
+      state !== null &&
+      state.progress.total !== state.progress.fulfilled + state.progress.failed,
     lookup,
-    clear,
   };
 };
 

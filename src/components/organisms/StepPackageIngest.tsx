@@ -1,6 +1,8 @@
 import {
+  ChangeEventHandler,
   FunctionComponent,
   MouseEventHandler,
+  useEffect,
   useMemo,
   useRef,
   useState,
@@ -15,13 +17,13 @@ import TextArea from '@/components/atoms/TextArea';
 import StepSection from '@/components/molecules/StepSection';
 import styles from '@/styles/Home.module.css';
 import usePackageIngest, {
-  PackageIngestMetadata,
+  PackageIngestResult,
 } from '@/hooks/usePackageIngest';
 import useLogger from '@/hooks/useLogger';
 
 export type StepPackageIngestProps = {
   className?: string;
-  onData: (data: PackageIngestMetadata) => void;
+  onData: (data: PackageIngestResult) => void;
 };
 const StepPackageIngest: FunctionComponent<StepPackageIngestProps> = ({
   className,
@@ -29,27 +31,35 @@ const StepPackageIngest: FunctionComponent<StepPackageIngestProps> = ({
 }) => {
   const logger = useLogger({ scope: 'StepPackageIngest' });
   const $input = useRef<HTMLTextAreaElement>(null);
+  const [value, setValue] = useState<string>('');
   const [autoMode, setAutoMode] = useState<boolean>(false);
-  const parserResult = usePackageIngest({ input: $input.current?.value });
+  const { result, tryParse } = usePackageIngest({ input: value });
   const dummyPackage = useMemo(() => JSON.stringify(dummy, null, 2), []);
-  const hasDummyPopulated = dummyPackage === $input.current?.value;
+  const hasDummyPopulated = dummyPackage === value;
 
-  const sendData = () => {
-    if (!$input.current) return;
+  useEffect(() => {
+    if (!result.isValid) return;
 
+    const { total, skipped } = result.counters;
     logger.info(
-      `Updating parent with parsed package.json [${parserResult.counters.total} deps, ${parserResult.counters.skipped} skipped]`,
+      `Updating parent with parsed package.json [${total} deps, ${skipped} skipped]`,
     );
-    onData(parserResult);
-  };
+    onData(result);
+  }, [logger, onData, result]);
 
-  const handleChange = () => sendData();
+  const handleManualSubmit = () => tryParse();
+  const handleChangeText: ChangeEventHandler<HTMLTextAreaElement> = (e) => {
+    setValue(e.target.value);
+    if (autoMode) {
+      tryParse();
+    }
+  };
   const handleDummyFill: MouseEventHandler<HTMLButtonElement> = () => {
     if (!$input.current) return;
 
     logger.info('Filling with dummy data...');
     $input.current.value = dummyPackage;
-    sendData();
+    setValue(dummyPackage);
   };
 
   return (
@@ -65,7 +75,7 @@ const StepPackageIngest: FunctionComponent<StepPackageIngestProps> = ({
           forwardRef={$input}
           placeholder={`{"todo":"Put your package.json here"}`}
           rows={16}
-          onChange={handleChange}
+          onChange={handleChangeText}
         />
         {!hasDummyPopulated && (
           <DummyButtonWrap>
@@ -87,7 +97,7 @@ const StepPackageIngest: FunctionComponent<StepPackageIngestProps> = ({
         Auto process
       </label>
       {!autoMode && (
-        <Button size="normal" variant="rainbow" onClick={sendData}>
+        <Button size="normal" variant="rainbow" onClick={handleManualSubmit}>
           Analyze!
         </Button>
       )}
