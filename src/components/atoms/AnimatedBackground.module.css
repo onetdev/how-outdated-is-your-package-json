@@ -1,0 +1,23 @@
+.container {
+  height: 100vh;
+  left: 0;
+  max-width: 100vw;
+  overflow: hidden;
+  position: absolute;
+  top: 0;
+  z-index: 1;
+}
+
+.fpsCounter {
+  background: red;
+  color: white;
+  left: 0;
+  position: absolute;
+  top: 0;
+  opacity: 0.5;
+}
+
+.canvas {
+  height: 100%;
+  width: 100%;
+}

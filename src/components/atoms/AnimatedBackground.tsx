@@ -7,11 +7,13 @@ import {
   useState,
 } from 'react';
 import { NoiseFunction2D, createNoise2D } from 'simplex-noise';
-import { styled } from 'styled-components';
 
 import appConfig from '@/config';
 import * as Vec from '@/utils/vector2';
 import useColorScheme from '@/hooks/useColorScheme';
+import useLogger from '@/hooks/useLogger';
+
+import styles from './AnimatedBackground.module.css';
 
 type PathDescriptor = {
   points: Vec.Vector2[];
@@ -33,6 +35,7 @@ const avg = (items: number[]) =>
 const rand = (min: number, max: number) => Math.random() * (max - min) + min;
 
 const AnimatedBackground: FunctionComponent = () => {
+  const logger = useLogger({ scope: 'AnimatedBackground' });
   const colorScheme = useColorScheme();
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [frameDeltaHistory, setFrameDeltaHistory] = useState<number[]>([]);
@@ -254,7 +257,7 @@ const AnimatedBackground: FunctionComponent = () => {
   useEffect(() => {
     if (!canvasRef.current || !canvasCtx) return;
 
-    console.log(`Rendering canvas...`);
+    logger.log(`Rendering canvas...`);
     const windowResize = () => {
       canvasCtx.canvas.width = window.innerWidth;
       canvasCtx.canvas.height = window.innerHeight;
@@ -288,35 +291,15 @@ const AnimatedBackground: FunctionComponent = () => {
   }, [canvasRef, canvasCtx, draw, config.resolution]);
 
   return (
-    <Container>
+    <div className={styles.container}>
       {appConfig.isDev && frameDeltaHistory.length > 0 && (
-        <FpsCounter>{Math.round(1000 / avg(frameDeltaHistory))}</FpsCounter>
+        <span className={styles.fpsCounter}>
+          {Math.round(1000 / avg(frameDeltaHistory))}
+        </span>
       )}
-      <Canvas ref={canvasRef} />
-    </Container>
+      <canvas className={styles.canvas} ref={canvasRef} />
+    </div>
   );
 };
-
-const Container = styled.div`
-  height: 100vh;
-  left: 0;
-  max-width: 100vw;
-  overflow: hidden;
-  position: absolute;
-  top: 0;
-  z-index: 1;
-`;
-const FpsCounter = styled.span`
-  background: red;
-  color: white;
-  left: 0;
-  position: absolute;
-  top: 0;
-  opacity: 0.2;
-`;
-const Canvas = styled.canvas`
-  height: 100%;
-  width: 100%;
-`;
 
 export default AnimatedBackground;
