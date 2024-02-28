@@ -12,6 +12,7 @@
   flex-flow: column;
   min-height: 65vh;
   justify-content: center;
+  max-width: calc(var(--max-width) / 2);
   padding: 0 var(--space-s-m);
 }
 .title {

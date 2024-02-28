@@ -259,16 +259,19 @@ const AnimatedBackground: FunctionComponent = () => {
   // Keep canvas in sync with window size
   useEffect(() => {
     const windowResize = () => {
+      const aspectRatio = window.innerWidth / window.innerHeight;
+      const innerWidth = Math.max(window.innerWidth, 1800);
+      const innerHeight = innerWidth / aspectRatio;
       if ($canvasCtx) {
-        $canvasCtx.canvas.width = window.innerWidth;
-        $canvasCtx.canvas.height = window.innerHeight;
+        $canvasCtx.canvas.width = innerWidth;
+        $canvasCtx.canvas.height = innerHeight;
         // const resolution =
         //   typeof window !== 'undefined' ? window.devicePixelRatio : 1;
         $canvasCtx.scale(1, 1);
       }
       setDimensions({
-        width: window.innerWidth,
-        height: window.innerHeight,
+        width: innerWidth,
+        height: innerHeight,
       });
     };
 

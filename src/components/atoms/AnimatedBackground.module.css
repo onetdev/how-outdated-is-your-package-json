@@ -1,11 +1,14 @@
 .container {
   height: 100vh;
   left: 0;
-  max-width: 100vw;
+  max-width: 1800px;
   overflow: hidden;
   position: absolute;
   top: 0;
+  left: 0;
+  right: 0;
   z-index: 1;
+  margin: 0 auto;
 }
 
 .fpsCounter {

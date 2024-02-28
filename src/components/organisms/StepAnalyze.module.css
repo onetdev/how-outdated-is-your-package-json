@@ -25,6 +25,14 @@ div.rowGood {
   list-style: none;
   padding: 0;
 }
+.emptyPlaceholder {
+  display: flex;
+  font-size: 1rem;
+  font-style: italic;
+  opacity: 0.3;
+  color: var(--color-text-secondary);
+  padding: var(--space-xl) 0;
+}
 
 @media (max-width: 768px) {
   .legend {

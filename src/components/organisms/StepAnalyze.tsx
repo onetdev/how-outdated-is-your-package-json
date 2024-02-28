@@ -8,7 +8,7 @@ import { ExternalLink } from 'lucide-react';
 
 import Text from '@/components/atoms/Text';
 import StepSection from '@/components/molecules/StepSection';
-import styles from '@/components/organisms/StepResults.module.css';
+import styles from '@/components/organisms/StepAnalyze.module.css';
 import { AgeInSeconds, PackageStatData } from '@/types';
 import dayjs from '@/utils/date';
 import { PackageIngestResult } from '@/hooks/usePackageIngest';
@@ -46,7 +46,11 @@ const StepResults: FunctionComponent<StepResultsProps> = ({
       className={className}
       titleAction={data.length ? <JsonDownloadButton data={data} /> : null}
       title="Check the results">
-      {data?.length < 1 && <Text>Complete the previous step first.</Text>}
+      {data?.length < 1 && (
+        <Text className={styles.emptyPlaceholder}>
+          Results table will be visible here once you fill in the package.json.
+        </Text>
+      )}
       {lookup.progress?.total > 0 && (
         <ProgressBar
           total={lookup.progress?.total}
