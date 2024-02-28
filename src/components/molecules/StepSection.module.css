@@ -5,6 +5,7 @@
   padding: var(--space-s-m);
   text-align: left;
   border-radius: var(--space-3xs);
+  border: 1px solid rgba(var(--on-surface), 0.1);
 }
 
 .title-wrap {
