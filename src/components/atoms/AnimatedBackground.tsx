@@ -124,7 +124,7 @@ const AnimatedBackground: FunctionComponent = () => {
       {
         noise: createNoise2D(),
         points: [
-          [-5, 15],
+          [0, 15],
           [40, 15],
           [10, 25],
           [0, 30],

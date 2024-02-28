@@ -2,6 +2,7 @@ import {
   ChangeEventHandler,
   FunctionComponent,
   MouseEventHandler,
+  useCallback,
   useEffect,
   useMemo,
   useRef,
@@ -21,13 +22,13 @@ import usePackageIngest, {
 import useLogger from '@/hooks/useLogger';
 import LoadingIndacator from '@/components/atoms/LoadingIndicator';
 
-import styles from './StepPackageIngest.module.css';
+import styles from './PackageIngest.module.css';
 
-export type StepPackageIngestProps = {
+export type PackageIngestProps = {
   className?: string;
   onData: (data: PackageIngestResult) => void;
 };
-const StepPackageIngest: FunctionComponent<StepPackageIngestProps> = ({
+const PackageIngest: FunctionComponent<PackageIngestProps> = ({
   className,
   onData,
 }) => {
@@ -50,12 +51,16 @@ const StepPackageIngest: FunctionComponent<StepPackageIngestProps> = ({
 
   const getValue = () => $input.current?.value || '';
   const handleManualSubmit = () => tryParse(getValue());
-  const handleChangeText: ChangeEventHandler<HTMLTextAreaElement> = (e) => {
-    console.log('CHANGE TEXT', e.target.value);
-    if (autoMode) {
+  const handleChangeText: ChangeEventHandler<HTMLTextAreaElement> = () => {
+    if (!autoMode) return;
+    tryParse(getValue());
+  };
+  const handleAutoToggle = useCallback(() => {
+    setAutoMode(!autoMode);
+    if (!autoMode) {
       tryParse(getValue());
     }
-  };
+  }, [autoMode, tryParse]);
   const handleDummyFill: MouseEventHandler<HTMLButtonElement> = () => {
     if (!$input.current) return;
 
@@ -108,7 +113,7 @@ const StepPackageIngest: FunctionComponent<StepPackageIngestProps> = ({
           <input
             type="checkbox"
             name="autoMode"
-            onChange={() => setAutoMode((prev) => !prev)}
+            onChange={handleAutoToggle}
             value={autoMode ? '1' : '0'}
             checked={autoMode}
           />
@@ -133,4 +138,4 @@ const StepPackageIngest: FunctionComponent<StepPackageIngestProps> = ({
   );
 };
 
-export default StepPackageIngest;
+export default PackageIngest;
