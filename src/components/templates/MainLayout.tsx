@@ -1,5 +1,6 @@
 import Image from 'next/image';
 import { ComponentProps, FunctionComponent, PropsWithChildren } from 'react';
+import { Analytics } from '@vercel/analytics/react';
 
 import styles from '@/components/templates/MainLayout.module.css';
 
@@ -36,6 +37,7 @@ const MainLayout: FunctionComponent<MainLayoutProps> = ({
 
   return (
     <div className={styles.wrapper}>
+      <Analytics />
       <main className={className}>{children}</main>
       <footer className={styles.footer}>
         {links.map(({ href, children: linkChildren }) => (
