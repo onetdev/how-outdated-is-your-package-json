@@ -7,11 +7,12 @@
 .footer {
   display: flex;
   flex: 1;
-  margin-top: 2rem;
+  margin: 2rem auto 0 auto;
   padding: 2rem 0;
-  border-top: 1px solid var(--background);
+  border-top: 1px solid rgba(var(--on-surface), 0.1);
   justify-content: center;
   align-items: center;
+  max-width: calc(var(--max-width) - 2rem);
 }
 
 .footer a {

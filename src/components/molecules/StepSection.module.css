@@ -5,9 +5,10 @@
   padding: var(--space-s-m);
   text-align: left;
   border-radius: var(--space-3xs);
+  border: 1px solid rgba(var(--on-surface), 0.1);
 }
 
-.title-wrap {
+.titleWrap {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -23,5 +24,12 @@
   .container {
     backdrop-filter: blur(5px);
     background: rgba(var(--surface), 0.8);
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .titleWrap {
+    flex-flow: row wrap;
+    gap: 1rem;
   }
 }

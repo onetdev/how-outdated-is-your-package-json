@@ -1,25 +1,21 @@
-import Head from "next/head";
-import { FunctionComponent, useState } from "react";
+import Head from 'next/head';
+import { FunctionComponent, useState } from 'react';
 
-import StepAnalyze from "@/components/organisms/StepAnalyze";
-import StepPackage from "@/components/organisms/StepPackage";
-import StepResults from "@/components/organisms/StepResults";
-import MainLayout from "@/components/templates/MainLayout";
-import usePackageParser from "@/hooks/usePackageParser";
-import usePackageStats from "@/hooks/usePackageStats";
-import styles from "@/styles/Home.module.css";
-import { PackageLookupResult } from "@/types";
-import AnimatedBackground from "@/components/atoms/AnimatedBackground";
-import config from "@/config";
+import StepPackageIngest from '@/components/organisms/StepPackageIngest';
+import StepResults from '@/components/organisms/StepAnalyze';
+import MainLayout from '@/components/templates/MainLayout';
+import { PackageIngestResult } from '@/hooks/usePackageIngest';
+import styles from '@/styles/Home.module.css';
+import globalStyles from '@/styles/Global.module.css';
+import AnimatedBackground from '@/components/atoms/AnimatedBackground';
+import config from '@/config';
 
 const Home: FunctionComponent = () => {
-  const [inputRaw, setInputRaw] = useState<string | null>(null);
-  const [lookupData, setLookupData] = useState<PackageLookupResult[] | null>();
-  const parsedPackage = usePackageParser({ input: inputRaw });
-  const statData = usePackageStats({ source: lookupData });
+  const [ingestResult, setIngestResult] =
+    useState<PackageIngestResult | null>();
 
   return (
-    <MainLayout>
+    <MainLayout className={styles.root}>
       <Head>
         <title>How outdated is your package.json?</title>
         <meta
@@ -32,33 +28,36 @@ const Home: FunctionComponent = () => {
       <div className={styles.container}>
         <div className={styles.header}>
           <h1 className={styles.title}>
-            How outdated is your{" "}
-            <code className={styles.code}>package.json?</code>
+            How outdated is your{' '}
+            <code className={globalStyles.code}>package.json?</code>
           </h1>
 
           <div className={styles.intro}>
-            We&#8217;ve all been there: &#8220;Don&#8217;t touch if it
-            works&#8221;. But how depressingly outdated is your project really?
-            Wait no more! I am here to let you know and it might even help you
-            to convince your PM, PO, LD, TC, WTH to actually allocate time for
-            upgrading.
+            <p>
+              Maintaining up-to-date dependencies is paramount for ensuring the{' '}
+              <strong>
+                security, performance, and overall vitality of your project
+              </strong>
+              .
+            </p>
+            <p>
+              Explore the status of your project effortlessly and avoid being
+              the one who delivers a project burdened with outdated
+              dependencies. Embrace the power of freshness for a resilient and
+              efficient development journey.
+            </p>
           </div>
         </div>
 
         <div className={styles.stepContainer}>
-          <StepPackage
-            className={styles["stepSection--step1"]}
-            onChange={setInputRaw}
-          />
-          <StepAnalyze
-            className={styles["stepSection--step2"]}
-            onResults={setLookupData}
-            packageMeta={parsedPackage}
-            registryUrl={config.registryUrl}
+          <StepPackageIngest
+            className={styles['stepSection--step1']}
+            onData={setIngestResult}
           />
           <StepResults
-            className={styles["stepSection--step3"]}
-            data={statData?.data}
+            className={styles['stepSection--step2']}
+            ingest={ingestResult}
+            registryUrl={config.registryUrl}
           />
         </div>
       </div>

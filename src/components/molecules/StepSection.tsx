@@ -1,6 +1,6 @@
-import { FunctionComponent, PropsWithChildren, ReactNode } from "react";
+import { FunctionComponent, PropsWithChildren, ReactNode } from 'react';
 
-import styles from "./StepSection.module.css";
+import styles from './StepSection.module.css';
 
 type StepSectionProps = PropsWithChildren<{
   title?: ReactNode;
@@ -15,7 +15,7 @@ const StepSection: FunctionComponent<StepSectionProps> = ({
 }) => (
   <div className={`${styles.container} ${className}`}>
     {title && (
-      <div className={styles["title-wrap"]}>
+      <div className={styles.titleWrap}>
         <h2 className={styles.title}>{title}</h2>
         {titleAction}
       </div>

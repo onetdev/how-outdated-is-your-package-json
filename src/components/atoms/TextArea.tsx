@@ -1,21 +1,21 @@
-import { clsx } from "clsx";
+import { clsx } from 'clsx';
 import {
   ComponentProps,
   FunctionComponent,
   PropsWithChildren,
   PropsWithoutRef,
   RefObject,
-} from "react";
+} from 'react';
 
-import styles from "@/components/atoms/TextArea.module.css";
+import styles from '@/components/atoms/TextArea.module.css';
 
 type TextAreaProps = PropsWithChildren<
   {
     forwardRef?: RefObject<HTMLTextAreaElement>;
-  } & PropsWithoutRef<ComponentProps<"textarea">>
+  } & PropsWithoutRef<ComponentProps<'textarea'>>
 >;
 const TextArea: FunctionComponent<TextAreaProps> = ({
-  className = "",
+  className = '',
   forwardRef = null,
   ...props
 }) => {

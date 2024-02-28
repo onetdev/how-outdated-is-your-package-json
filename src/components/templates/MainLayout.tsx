@@ -1,31 +1,28 @@
-import { clsx } from "clsx";
-import Image from "next/image";
-import { ComponentProps, FunctionComponent, PropsWithChildren } from "react";
-import { Analytics } from "@vercel/analytics/react";
+import Image from 'next/image';
+import { ComponentProps, FunctionComponent, PropsWithChildren } from 'react';
+import { Analytics } from '@vercel/analytics/react';
 
-import styles from "@/components/templates/MainLayout.module.css";
+import styles from '@/components/templates/MainLayout.module.css';
 
 type MainLayoutProps = PropsWithChildren<{
-  className?: ComponentProps<"div">["className"];
+  className?: ComponentProps<'div'>['className'];
 }>;
 const MainLayout: FunctionComponent<MainLayoutProps> = ({
   children,
   className,
 }) => {
-  const style = clsx([styles.container, className]);
-
   const links = [
-    { href: "https://onet.dev", children: "Konrad Koller" },
+    { href: 'https://onet.dev', children: 'Konrad Koller' },
     {
-      href: "https://buymeacoffee.com/onetdev",
-      children: "Sponsor my addiction",
+      href: 'https://buymeacoffee.com/onetdev',
+      children: 'Sponsor my addiction',
     },
     {
-      href: "https://github.com/onetdev/how-outdated-is-your-package-json",
-      children: "GitHub source",
+      href: 'https://github.com/onetdev/how-outdated-is-your-package-json',
+      children: 'GitHub source',
     },
     {
-      href: "https://riltech.co",
+      href: 'https://riltech.co',
       children: (
         <Image
           src="/riltech.svg"
@@ -41,7 +38,7 @@ const MainLayout: FunctionComponent<MainLayoutProps> = ({
   return (
     <div className={styles.wrapper}>
       <Analytics />
-      <main className={style}>{children}</main>
+      <main className={className}>{children}</main>
       <footer className={styles.footer}>
         {links.map(({ href, children: linkChildren }) => (
           <a key={href} href={href} target="_blank" rel="noopener noreferrer">

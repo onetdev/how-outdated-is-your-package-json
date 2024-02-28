@@ -1,6 +1,6 @@
-import { coerce, valid } from "semver";
+import { coerce, valid } from 'semver';
 
-import { DependencyEntry } from "@/types";
+import { DependencyEntry } from '@/types';
 
 const sanitizeDependencyArray = (
   items: Record<string, string>,
