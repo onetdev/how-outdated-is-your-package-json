@@ -1,8 +1,8 @@
 import Head from 'next/head';
 import { FunctionComponent, useState } from 'react';
 
-import StepPackageIngest from '@/components/organisms/StepPackageIngest';
-import StepResults from '@/components/organisms/StepAnalyze';
+import PackageIngest from '@/components/organisms/PackageIngest/PackageIngest';
+import AnalyzeStep from '@/components/organisms/AnalyzeStep/AnalyzeStep';
 import MainLayout from '@/components/templates/MainLayout';
 import { PackageIngestResult } from '@/hooks/usePackageIngest';
 import styles from '@/styles/Home.module.css';
@@ -50,11 +50,11 @@ const Home: FunctionComponent = () => {
         </div>
 
         <div className={styles.stepContainer}>
-          <StepPackageIngest
+          <PackageIngest
             className={styles['stepSection--step1']}
             onData={setIngestResult}
           />
-          <StepResults
+          <AnalyzeStep
             className={styles['stepSection--step2']}
             ingest={ingestResult}
             registryUrl={config.registryUrl}
