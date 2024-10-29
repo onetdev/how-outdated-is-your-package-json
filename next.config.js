@@ -2,7 +2,6 @@
 const nextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
-  swcMinify: true,
   compiler: {
     // Enables the styled-components SWC transform
     styledComponents: true,
