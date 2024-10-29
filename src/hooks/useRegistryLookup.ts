@@ -1,8 +1,8 @@
 import { useCallback, useState } from 'react';
 
+import useLogger from '@/hooks/useLogger';
 import { DependencyEntry, PackageLookupResult } from '@/types';
 import getSemverCandidate from '@/utils/getSemverCandidate';
-import useLogger from '@/hooks/useLogger';
 
 export type RegistryLookupState = {
   progress: {

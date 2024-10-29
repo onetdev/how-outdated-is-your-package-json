@@ -1,6 +1,6 @@
+import { Analytics } from '@vercel/analytics/react';
 import Image from 'next/image';
 import { ComponentProps, FunctionComponent, PropsWithChildren } from 'react';
-import { Analytics } from '@vercel/analytics/react';
 
 import styles from '@/components/templates/MainLayout.module.css';
 
@@ -25,7 +25,7 @@ const MainLayout: FunctionComponent<MainLayoutProps> = ({
       href: 'https://riltech.co',
       children: (
         <Image
-          src="/riltech.svg"
+          src="/assets/riltech.svg"
           alt="Riltech"
           title="Riltech"
           height="16"

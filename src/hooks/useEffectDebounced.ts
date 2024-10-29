@@ -9,6 +9,7 @@ const useEffectDebounced = (
     const timerId = setTimeout(() => callback(), delay);
 
     return () => clearTimeout(timerId);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, deps);
 };
 

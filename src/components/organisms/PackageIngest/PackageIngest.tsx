@@ -1,3 +1,4 @@
+import { WandIcon } from 'lucide-react';
 import {
   ChangeEventHandler,
   FunctionComponent,
@@ -8,21 +9,20 @@ import {
   useRef,
   useState,
 } from 'react';
-import { WandIcon } from 'lucide-react';
+
+import styles from './PackageIngest.module.css';
 
 import dummy from '@/assets/dummy-package.json';
 import Button from '@/components/atoms/Button';
+import LoadingIndacator from '@/components/atoms/LoadingIndicator';
 import Text from '@/components/atoms/Text';
 import TextArea from '@/components/atoms/TextArea';
 import StepSection from '@/components/molecules/StepSection';
-import globalStyles from '@/styles/Global.module.css';
+import useLogger from '@/hooks/useLogger';
 import usePackageIngest, {
   PackageIngestResult,
 } from '@/hooks/usePackageIngest';
-import useLogger from '@/hooks/useLogger';
-import LoadingIndacator from '@/components/atoms/LoadingIndicator';
-
-import styles from './PackageIngest.module.css';
+import globalStyles from '@/styles/Global.module.css';
 
 export type PackageIngestProps = {
   className?: string;

@@ -1,16 +1,16 @@
 import { FunctionComponent, useEffect, useState } from 'react';
 
+import AnalyzeTable from './AnalyzeTable';
+
 import Text from '@/components/atoms/Text';
+import JsonDownloadButton from '@/components/molecules/JsonDownloadButton';
 import StepSection from '@/components/molecules/StepSection';
 import styles from '@/components/organisms/AnalyzeStep/AnalyzeStep.module.css';
-import { PackageIngestResult } from '@/hooks/usePackageIngest';
 import useDependencyStats from '@/hooks/useDependencyStats';
-import useRegistryLookup from '@/hooks/useRegistryLookup';
 import useEffectDebounced from '@/hooks/useEffectDebounced';
-import JsonDownloadButton from '@/components/molecules/JsonDownloadButton';
+import { PackageIngestResult } from '@/hooks/usePackageIngest';
+import useRegistryLookup from '@/hooks/useRegistryLookup';
 import { PackageStatData } from '@/types';
-
-import AnalyzeTable from './AnalyzeTable';
 
 export type AnalyzeStepProps = {
   className?: string;
