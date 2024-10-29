@@ -1,8 +1,8 @@
 {
   "recommendations": [
-    "esbenp.prettier-vscode",
     "dbaeumer.vscode-eslint",
-    "styled-components.vscode-styled-components",
-    "rubymaniac.vscode-direnv"
+    "esbenp.prettier-vscode",
+    "rubymaniac.vscode-direnv",
+    "styled-components.vscode-styled-components"
   ]
 }

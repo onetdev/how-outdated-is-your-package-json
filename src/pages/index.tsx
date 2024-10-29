@@ -1,14 +1,14 @@
 import Head from 'next/head';
 import { FunctionComponent, useState } from 'react';
 
-import PackageIngest from '@/components/organisms/PackageIngest/PackageIngest';
-import AnalyzeStep from '@/components/organisms/AnalyzeStep/AnalyzeStep';
-import MainLayout from '@/components/templates/MainLayout';
-import { PackageIngestResult } from '@/hooks/usePackageIngest';
-import styles from '@/styles/Home.module.css';
-import globalStyles from '@/styles/Global.module.css';
 import AnimatedBackground from '@/components/atoms/AnimatedBackground';
+import AnalyzeStep from '@/components/organisms/AnalyzeStep/AnalyzeStep';
+import PackageIngest from '@/components/organisms/PackageIngest/PackageIngest';
+import MainLayout from '@/components/templates/MainLayout';
 import config from '@/config';
+import { PackageIngestResult } from '@/hooks/usePackageIngest';
+import globalStyles from '@/styles/Global.module.css';
+import styles from '@/styles/Home.module.css';
 
 const Home: FunctionComponent = () => {
   const [ingestResult, setIngestResult] =

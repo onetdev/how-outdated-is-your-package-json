@@ -6,14 +6,14 @@ import {
   useRef,
   useState,
 } from 'react';
-import { NoiseFunction2D, createNoise2D } from 'simplex-noise';
-
-import appConfig from '@/config';
-import * as Vec from '@/utils/vector2';
-import useColorScheme from '@/hooks/useColorScheme';
-import useLogger from '@/hooks/useLogger';
+import { createNoise2D, NoiseFunction2D } from 'simplex-noise';
 
 import styles from './AnimatedBackground.module.css';
+
+import appConfig from '@/config';
+import useColorScheme from '@/hooks/useColorScheme';
+import useLogger from '@/hooks/useLogger';
+import * as Vec from '@/utils/vector2';
 
 type PathDescriptor = {
   points: Vec.Vector2[];
@@ -42,6 +42,7 @@ const AnimatedBackground: FunctionComponent = () => {
   const [frameDeltaHistory, setFrameDeltaHistory] = useState<number[]>([]);
   const $canvasCtx = useMemo(
     () => $canvasRef.current?.getContext('2d'),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [$canvasRef.current],
   );
 
@@ -86,7 +87,7 @@ const AnimatedBackground: FunctionComponent = () => {
     if (typeof window === 'undefined') return null;
 
     // render automatically pulles new items.
-    return [`./aurora-drop-${colorScheme}-a.png`].map((x) => {
+    return [`./assets/aurora-drop-${colorScheme}-a.png`].map((x) => {
       const img = new Image();
       img.src = x;
       return img;

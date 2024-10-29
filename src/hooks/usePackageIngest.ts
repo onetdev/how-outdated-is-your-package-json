@@ -1,8 +1,8 @@
 import { useState } from 'react';
 
+import useLogger from '@/hooks/useLogger';
 import { DependencyEntry } from '@/types';
 import sanitizeDependencyArray from '@/utils/sanitizeDependencyArray';
-import useLogger from '@/hooks/useLogger';
 
 export type PackageIngestResult =
   | {

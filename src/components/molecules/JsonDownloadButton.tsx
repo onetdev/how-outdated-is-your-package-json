@@ -1,5 +1,5 @@
-import { FunctionComponent } from 'react';
 import { DownloadIcon } from 'lucide-react';
+import { FunctionComponent } from 'react';
 
 import Button from '@/components/atoms/Button';
 

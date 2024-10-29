@@ -1,10 +1,10 @@
 import { clsx } from 'clsx';
+import { ExternalLink } from 'lucide-react';
 import { FunctionComponent, useMemo } from 'react';
 import DataTable, {
   ConditionalStyles,
   TableColumn,
 } from 'react-data-table-component';
-import { ExternalLink } from 'lucide-react';
 
 import styles from '@/components/organisms/AnalyzeStep/AnalyzeStep.module.css';
 import { AgeInSeconds, PackageStatData } from '@/types';
